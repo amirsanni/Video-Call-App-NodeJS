@@ -33,6 +33,11 @@
                     if(start){
                         init();
                     }
+
+                    else{
+                        //get user media
+                        navigator.mediaDevices.getUserMedia(streamConstraints);
+                    }
                 });
 
 
@@ -41,7 +46,7 @@
                 });
 
 
-                socket.on('offer', async (data)=>{console.log(data);
+                socket.on('offer', async (data)=>{
                     await pc.setRemoteDescription(new RTCSessionDescription(data.description));
 
                     navigator.mediaDevices.getUserMedia(streamConstraints).then(async (stream)=>{
