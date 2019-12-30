@@ -132,8 +132,8 @@
 
 
                     //send ice candidate to partners
-                    pc.onicecandidate = (d)=>{
-                        socket.emit('ice candidates', {candidate: d.candidate, room:room});
+                    pc.onicecandidate = ({candidate})=>{
+                        socket.emit('ice candidates', {candidate: candidate, room:room});
                     };
 
 

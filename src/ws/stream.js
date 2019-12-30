@@ -17,7 +17,7 @@ const stream = (socket)=>{
 
 
     socket.on('answer', (data)=>{
-        socket.to(data.room).emit('answer', {description: data.description});
+        socket.to(data.recipient).emit('answer', {description: data.description});
     });
 
 
