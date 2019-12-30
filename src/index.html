@@ -35,19 +35,14 @@
                     }
                 });
 
-                socket.on('new user', (msg)=>{
-                    console.log(msg);
-                });
-
 
                 socket.on('ice candidates', async (data)=>{console.log(data);
-                    await pc.addIceCandidate(data.candidate);
-                    // data.candidate ? await pc.addIceCandidate(data.candidate) : '';
+                    await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
                 });
 
 
                 socket.on('offer', async (data)=>{console.log(data);
-                    await pc.setRemoteDescription(data.description);
+                    await pc.setRemoteDescription(new RTCSessionDescription(data.description));
 
                     if(pc.localDescription){
                         socket.emit('answer', {description:pc.localDescription, recipient:data.sender, room:room});
@@ -76,7 +71,7 @@
 
 
                 socket.on('answer', async (data)=>{console.log(data);
-                    await pc.setRemoteDescription(data.description);
+                    await pc.setRemoteDescription(new RTCSessionDescription(data.description));
                 })
 
 
