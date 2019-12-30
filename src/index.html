@@ -143,11 +143,11 @@
                         console.info('we have track', str);
                         // document.getElementById('remote').srcObject = e.streams[0];
 
-                        // if(document.getElementById(str.id)){console.log('here')
-                        //     document.getElementById(str.id).srcObject = str;
-                        // }
+                        if(document.getElementById(str.id)){
+                            document.getElementById(str.id).srcObject = str;
+                        }
 
-                        // else{
+                        else{
                             let newVid = document.createElement('video');
                             newVid.id = str.id;
                             newVid.srcObject = str;
@@ -155,7 +155,7 @@
                             newVid.height = 300;
 
                             document.getElementById('videos').appendChild(newVid);
-                        // }
+                        }
                     };
 
 
