@@ -24,12 +24,11 @@
                 let socket = io('/stream');
 
                 const username = Math.random().toString(36).slice(2).substring(0, 15);
-                console.log(username);
 
                 socket.emit('subscribe', {
                     room: room,
                     username: username
-                }, (start)=>{console.log(`start: ${start}`);
+                }, (start)=>{
                     if(start){
                         init();
                     }
@@ -47,7 +46,7 @@
                 });
 
 
-                socket.on('ice candidates', async (data)=>{console.log(data);
+                socket.on('ice candidates', async (data)=>{
                     data.candidate ? await pc.addIceCandidate(new RTCIceCandidate(data.candidate)) : '';
                 });
 
