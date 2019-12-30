@@ -64,7 +64,7 @@
                 });
 
 
-                socket.on('answer', async (data)=>{console.log(data);
+                socket.on('answer', async (data)=>{
                     await pc.setRemoteDescription(new RTCSessionDescription(data.description));
                 })
 
