@@ -36,7 +36,11 @@
 
                     else{
                         //get user media
-                        navigator.mediaDevices.getUserMedia(streamConstraints);
+                        navigator.mediaDevices.getUserMedia(streamConstraints).then((stream)=>{
+                            stream.getTracks().forEach((track)=>{
+                                pc.addTrack(track, stream);
+                            });
+                        });
                     }
                 });
 
@@ -115,7 +119,7 @@
 
 
                     //create offer
-                    pc.onnegotiationneeded = async ()=>{
+                    pc.onnegotiationneeded = async ()=>{console.log('neg needed');
                         let offer = await pc.createOffer();
                         
                         await pc.setLocalDescription(offer);
