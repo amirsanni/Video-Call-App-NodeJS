@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+
+        <script src='/socket.io/socket.io.js'></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/7.3.0/adapter.min.js" integrity="sha256-2qQheewaqnZlXJ3RJRghVUwD/3fD9HNqxh4C+zvgmF4=" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <h2>Video Call</h2>
+        <div id='videos'>
+            <video id='local' height="300" autoplay></video>
+            <video id='remote' height="300" style="margin: 10px;" autoplay></video>
+        </div>
+
+
+        <script>
+            window.addEventListener('load', ()=>{
+                const room = getQString(location.href, 'room');
+                const streamConstraints = {video:true, audio:true};
+                const pc = new RTCPeerConnection({iceServers: [{   urls: [ "stun:eu-turn4.xirsys.com" ]}, {   username: "ml0jh0qMKZKd9P_9C0UIBY2G0nSQMCFBUXGlk6IXDJf8G2uiCymg9WwbEJTMwVeiAAAAAF2__hNSaW5vbGVl",   credential: "4dd454a6-feee-11e9-b185-6adcafebbb45",   urls: [       "turn:eu-turn4.xirsys.com:80?transport=udp",       "turn:eu-turn4.xirsys.com:3478?transport=udp",       "turn:eu-turn4.xirsys.com:80?transport=tcp",       "turn:eu-turn4.xirsys.com:3478?transport=tcp",       "turns:eu-turn4.xirsys.com:443?transport=tcp",       "turns:eu-turn4.xirsys.com:5349?transport=tcp"   ]}]});
+
+                let socket = io('/stream');
+
+                const username = Math.random().toString(36).slice(2).substring(0, 15);
+                console.log(username);
+
+                socket.emit('subscribe', {
+                    room: room,
+                    username: username
+                }, (start)=>{console.log('start');
+                    if(start){
+                        init();
+                    }
+                });
+
+                socket.on('new user', (msg)=>{
+                    console.log(msg);
+                });
+
+
+                socket.on('ice candidates', async (data)=>{console.log(data);
+                    data.candidate ? await pc.addIceCandidate(data.candidate) : '';
+                });
+
+
+                socket.on('offer', async (data)=>{console.log(data);
+                    await pc.setRemoteDescription(data.description);
+
+                    if(pc.localDescription){
+                        socket.emit('answer', {description:pc.localDescription, recipient:data.sender});
+                    }
+
+                    else{
+                        navigator.mediaDevices.getUserMedia(streamConstraints).then(async (stream)=>{
+                            if(!document.getElementById('local').srcObject){
+                                document.getElementById('local').srcObject = stream;
+                            }
+
+                            stream.getTracks().forEach((track)=>{
+                                pc.addTrack(track, stream);
+                            });
+
+                            let answer = await pc.createAnswer();
+                            
+                            await pc.setLocalDescription(answer);
+
+                            socket.emit('answer', {description:pc.localDescription, recipient:data.sender});
+                        }).catch((e)=>{
+                            console.error(e);
+                        });
+                    }
+                });
+
+
+                socket.on('answer', async (data)=>{console.log(data);
+                    await pc.setRemoteDescription(data.description);
+                })
+
+
+                function getQString(url='', keyToReturn=''){
+                    url = url ? url : location.href;
+                    let queryStrings = decodeURIComponent(url).split('#', 2)[0].split('?', 2)[1];
+                    
+                    if(queryStrings){
+                        let splittedQStrings = queryStrings.split('&');
+                        
+                        if(splittedQStrings.length){
+                            let queryStringObj = {};
+                            
+                            splittedQStrings.forEach(function(keyValuePair){
+                                let keyValue = keyValuePair.split('=', 2);
+                                
+                                if(keyValue.length){
+                                    queryStringObj[keyValue[0]] = keyValue[1];
+                                }
+                            });            
+                            
+                            return keyToReturn ? (queryStringObj[keyToReturn] ? queryStringObj[keyToReturn] : null) : queryStringObj;
+                        }
+                        
+                        return null;
+                    }
+                    
+                    return null;
+                }
+
+                function init(){
+                    navigator.mediaDevices.getUserMedia(streamConstraints).then((stream)=>{
+                        stream.getTracks().forEach((track)=>{
+                            pc.addTrack(track, stream);//should trigger negotiationneeded event
+                        });
+
+                        document.getElementById('local').srcObject = stream;
+                    }).catch((e)=>{
+                        console.log(`stream error: ${e}`);
+                    });
+
+
+
+                    //create offer
+                    pc.onnegotiationneeded = async ()=>{
+                        let offer = await pc.createOffer();
+                        
+                        await pc.setLocalDescription(offer);
+
+                        socket.emit('offer', {description:pc.localDescription, room:room, sender:username});
+                    };
+
+
+
+                    //send ice candidate to partners
+                    pc.onicecandidate = (d)=>{
+                        socket.emit('ice candidates', {candidate: d.candidate, room:room});
+                    };
+
+
+
+                    //add
+                    pc.ontrack = (e)=>{
+                        let str = e.streams[0];
+                        console.info('we have track', str);
+                        document.getElementById('remote').srcObject = e.streams[0];
+
+                        // if(document.getElementById(str.id)){console.log('here')
+                        //     document.getElementById(str.id).srcObject = str;
+                        // }
+
+                        // else{
+                        //     let newVid = document.createElement('video');
+                        //     newVid.id = str.id;
+                        //     newVid.srcObject = str;
+                        //     newVid.autoplay = true;
+                        //     newVid.height = 300;
+
+                        //     document.getElementById('videos').appendChild(newVid);
+                        // }
+                    };
+
+
+
+                    pc.onconnectionstatechange = ()=>{};
+
+
+
+                    pc.onsignalingstatechange = ()=>{};
+                }
+
+                
+                // document.getElementById('pipBtn').addEventListener('click', ()=>{
+                //     if(document.pictureInPictureElement){
+                //         document.exitPictureInPicture();
+                //     }
+                    
+                //     else{
+                //         document.getElementById('vid').requestPictureInPicture();
+                //     }
+                // })
+            });
+        </script>
+    </body>
+</html>
