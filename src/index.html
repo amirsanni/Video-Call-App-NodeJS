@@ -41,7 +41,8 @@
 
 
                 socket.on('ice candidates', async (data)=>{console.log(data);
-                    data.candidate ? await pc.addIceCandidate(data.candidate) : '';
+                    await pc.addIceCandidate(data.candidate);
+                    // data.candidate ? await pc.addIceCandidate(data.candidate) : '';
                 });
 
 
