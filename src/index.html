@@ -40,6 +40,8 @@
                             stream.getTracks().forEach((track)=>{
                                 pc.addTrack(track, stream);
                             });
+
+                            document.getElementById('local').srcObject = stream;
                         });
                     }
                 });
@@ -119,7 +121,7 @@
 
 
                     //create offer
-                    pc.onnegotiationneeded = async ()=>{console.log('neg needed');
+                    pc.onnegotiationneeded = async ()=>{
                         let offer = await pc.createOffer();
                         
                         await pc.setLocalDescription(offer);
