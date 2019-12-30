@@ -29,7 +29,7 @@
                 socket.emit('subscribe', {
                     room: room,
                     username: username
-                }, (start)=>{console.log('start');
+                }, (start)=>{console.log(`start: ${start}`);
                     if(start){
                         init();
                     }
