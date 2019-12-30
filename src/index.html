@@ -141,20 +141,20 @@
                     pc.ontrack = (e)=>{
                         let str = e.streams[0];
                         console.info('we have track', str);
-                        document.getElementById('remote').srcObject = e.streams[0];
+                        // document.getElementById('remote').srcObject = e.streams[0];
 
                         // if(document.getElementById(str.id)){console.log('here')
                         //     document.getElementById(str.id).srcObject = str;
                         // }
 
                         // else{
-                        //     let newVid = document.createElement('video');
-                        //     newVid.id = str.id;
-                        //     newVid.srcObject = str;
-                        //     newVid.autoplay = true;
-                        //     newVid.height = 300;
+                            let newVid = document.createElement('video');
+                            newVid.id = str.id;
+                            newVid.srcObject = str;
+                            newVid.autoplay = true;
+                            newVid.height = 300;
 
-                        //     document.getElementById('videos').appendChild(newVid);
+                            document.getElementById('videos').appendChild(newVid);
                         // }
                     };
 
