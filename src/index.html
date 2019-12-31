@@ -10,7 +10,7 @@
     <body>
         <h2>Video Call</h2>
         <div id='videos'>
-            <video id='local' height="300" autoplay></video>
+            <video id='local' height="300" autoplay muted></video>
             <video id='remote' height="300" style="margin: 10px;" autoplay></video>
         </div>
 
@@ -141,21 +141,21 @@
                     pc.ontrack = (e)=>{
                         let str = e.streams[0];
                         console.info('we have track', str);
-                        // document.getElementById('remote').srcObject = e.streams[0];
+                        document.getElementById('remote').srcObject = e.streams[0];
 
-                        if(document.getElementById(str.id)){
-                            document.getElementById(str.id).srcObject = str;
-                        }
+                        // if(document.getElementById(str.id)){
+                        //     document.getElementById(str.id).srcObject = str;
+                        // }
 
-                        else{
-                            let newVid = document.createElement('video');
-                            newVid.id = str.id;
-                            newVid.srcObject = str;
-                            newVid.autoplay = true;
-                            newVid.height = 300;
+                        // else{
+                        //     let newVid = document.createElement('video');
+                        //     newVid.id = str.id;
+                        //     newVid.srcObject = str;
+                        //     newVid.autoplay = true;
+                        //     newVid.height = 300;
 
-                            document.getElementById('videos').appendChild(newVid);
-                        }
+                        //     document.getElementById('videos').appendChild(newVid);
+                        // }
                     };
 
 
