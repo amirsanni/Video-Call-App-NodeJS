@@ -122,23 +122,25 @@
 
                     //create offer
                     pc[partnerName].onnegotiationneeded = async ()=>{console.log('neg needed');
-                        // let offer = await pc[partnerName].createOffer();
-                        
-                        // await pc[partnerName].setLocalDescription(offer);
+                        // if(createOffer){
+                            let offer = await pc[partnerName].createOffer();
+                            
+                            await pc[partnerName].setLocalDescription(offer);
 
-                        // socket.emit('sdp', {description:pc[partnerName].localDescription, to:partnerName, sender:username});
+                            socket.emit('sdp', {description:pc[partnerName].localDescription, to:partnerName, sender:username});
+                        // }
                     };
-                    if(createOffer){console.log('create offer is true')
-                        pc[partnerName].createOffer().then((offer)=>{console.log('Offer created')
-                            pc[partnerName].setLocalDescription(offer).then(()=>{console.log('local desc set')
-                                socket.emit('sdp', {description:pc[partnerName].localDescription, to:partnerName, sender:username});
-                            }).catch((e)=>{
-                                console.error('Error setting local description for partner: '+e);
-                            });
-                        }).catch((err)=>{
-                            console.error('Error creating offer: '+err);
-                        });
-                    }
+                    // if(createOffer){console.log('create offer is true')
+                    //     pc[partnerName].createOffer().then((offer)=>{console.log('Offer created')
+                    //         pc[partnerName].setLocalDescription(offer).then(()=>{console.log('local desc set')
+                    //             socket.emit('sdp', {description:pc[partnerName].localDescription, to:partnerName, sender:username});
+                    //         }).catch((e)=>{
+                    //             console.error('Error setting local description for partner: '+e);
+                    //         });
+                    //     }).catch((err)=>{
+                    //         console.error('Error creating offer: '+err);
+                    //     });
+                    // }
 
                     // else{
                     //     pc[partnerName].createAnswer().then((answer)=>{
