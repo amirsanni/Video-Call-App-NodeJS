@@ -31,26 +31,26 @@
                 });
 
 
-                socket.on('new user', (data)=>{
+                socket.on('new user', (data)=>{console.log('new user joined: '+data)
                     socket.emit('newUserStart', {to:data.username, sender:username});
                     pc.push(data.username);
                     init(true, data.username);
                 });
 
 
-                socket.on('newUserStart', (data)=>{
+                socket.on('newUserStart', (data)=>{console.log('new user prompted to start: '+data)
                     pc.push(data.sender);
                     init(false, data.sender);
                 });
 
 
-                socket.on('ice candidates', async (data)=>{
+                socket.on('ice candidates', async (data)=>{console.log('ice received: '+data)
                     data.candidate ? await pc[data.sender].addIceCandidate(new RTCIceCandidate(data.candidate)) : '';
                 });
 
 
-                socket.on('sdp', async (data)=>{
-                    if(data.description.type === 'offer'){
+                socket.on('sdp', async (data)=>{console.log('sdp received: '+ data)
+                    if(data.description.type === 'offer'){console.log('sdp is offer')
                         await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description));
 
                         navigator.mediaDevices.getUserMedia(streamConstraints).then(async (stream)=>{
@@ -72,7 +72,7 @@
                         });
                     }
 
-                    else if(data.description.type === 'answer'){
+                    else if(data.description.type === 'answer'){console.log('sdp is answer')
                         await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description));
                     }
                 });
@@ -128,9 +128,9 @@
 
                     //     socket.emit('sdp', {description:pc[partnerName].localDescription, to:partnerName, sender:username});
                     // };
-                    if(createOffer){
-                        pc[partnerName].createOffer().then((offer)=>{
-                            pc[partnerName].setLocalDescription(offer).then(()=>{
+                    if(createOffer){console.log('create offer is true')
+                        pc[partnerName].createOffer().then((offer)=>{console.log('Offer created')
+                            pc[partnerName].setLocalDescription(offer).then(()=>{console.log('local desc set')
                                 socket.emit('sdp', {description:pc[partnerName].localDescription, to:partnerName, sender:username});
                             }).catch((e)=>{
                                 console.error('Error setting local description for partner: '+e);
