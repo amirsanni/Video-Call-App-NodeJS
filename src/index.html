@@ -151,23 +151,23 @@
 
 
                     //send ice candidate to partnerNames
-                    pc[partnerName].onicecandidate = ({candidate})=>{
+                    pc[partnerName].onicecandidate = ({candidate})=>{console.log('ice available')
                         socket.emit('ice candidates', {candidate: candidate, to:partnerName, sender:username});
                     };
 
 
 
                     //add
-                    pc[partnerName].ontrack = (e)=>{
+                    pc[partnerName].ontrack = (e)=>{console.log('track available')
                         let str = e.streams[0];
                         console.info('we have track', str);
                         document.getElementById('remote').srcObject = e.streams[0];
 
-                        if(document.getElementById(partnerName).length){
+                        if(document.getElementById(partnerName).length){console.log('partner exists')
                             document.getElementById(partnerName).srcObject = str;
                         }
 
-                        else{
+                        else{console.log('new partner')
                             let newVid = document.createElement('video');
                             newVid.id = partnerName;
                             newVid.srcObject = str;
