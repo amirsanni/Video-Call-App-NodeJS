@@ -11,13 +11,8 @@ const stream = (socket)=>{
     });
 
 
-    socket.on('offer', (data)=>{
-        socket.to(data.room).emit('offer', {description: data.description, sender:data.sender});
-    });
-
-
-    socket.on('answer', (data)=>{
-        socket.to(data.recipient).emit('answer', {description: data.description});
+    socket.on('sdp', (data)=>{
+        socket.to(data.room).emit('sdp', {description: data.description, sender:data.sender});
     });
 
 

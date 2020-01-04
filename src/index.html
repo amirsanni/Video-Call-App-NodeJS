@@ -51,32 +51,33 @@
                 });
 
 
-                socket.on('offer', async (data)=>{
-                    await pc.setRemoteDescription(new RTCSessionDescription(data.description));
+                socket.on('sdp', async (data)=>{
+                    if(data.description.type === 'offer'){
+                        await pc.setRemoteDescription(new RTCSessionDescription(data.description));
 
-                    navigator.mediaDevices.getUserMedia(streamConstraints).then(async (stream)=>{
-                        if(!document.getElementById('local').srcObject){
-                            document.getElementById('local').srcObject = stream;
-                        }
+                        navigator.mediaDevices.getUserMedia(streamConstraints).then(async (stream)=>{
+                            if(!document.getElementById('local').srcObject){
+                                document.getElementById('local').srcObject = stream;
+                            }
 
-                        stream.getTracks().forEach((track)=>{
-                            pc.addTrack(track, stream);
+                            stream.getTracks().forEach((track)=>{
+                                pc.addTrack(track, stream);
+                            });
+
+                            let answer = await pc.createAnswer();
+                            
+                            await pc.setLocalDescription(answer);
+
+                            socket.emit('sdp', {description:pc.localDescription, recipient:data.sender, room:room});
+                        }).catch((e)=>{
+                            console.error(e);
                         });
+                    }
 
-                        let answer = await pc.createAnswer();
-                        
-                        await pc.setLocalDescription(answer);
-
-                        socket.emit('answer', {description:pc.localDescription, recipient:data.sender, room:room});
-                    }).catch((e)=>{
-                        console.error(e);
-                    });
+                    else if(data.description.type === 'answer'){
+                        await pc.setRemoteDescription(new RTCSessionDescription(data.description));
+                    }
                 });
-
-
-                socket.on('answer', async (data)=>{
-                    await pc.setRemoteDescription(new RTCSessionDescription(data.description));
-                })
 
 
                 function getQString(url='', keyToReturn=''){
@@ -125,7 +126,7 @@
                         
                         await pc.setLocalDescription(offer);
 
-                        socket.emit('offer', {description:pc.localDescription, room:room, sender:username});
+                        socket.emit('sdp', {description:pc.localDescription, room:room, sender:username});
                     };
 
 
