@@ -1,23 +1,28 @@
 const stream = (socket)=>{
-    socket.on('subscribe', (data, fn)=>{
+    socket.on('subscribe', (data)=>{
         //subscribe/join a room
         socket.join(data.room);
         socket.join(data.username);
 
-        //inform user if there are already people in the room
-        fn(socket.adapter.rooms[data.room].length > 1);
+        //Inform other members in the room of new user's arrival
+        if(socket.adapter.rooms[data.room].length > 1){
+            socket.to(data.room).emit('new user', {username:data.username});
+        }
+    });
 
-        socket.broadcast.emit('new user', `${data.username} joined`);
+
+    socket.on('newUserStart', (data)=>{
+        socket.to(data.to).emit('newUserStart', {sender:data.sender});
     });
 
 
     socket.on('sdp', (data)=>{
-        socket.to(data.room).emit('sdp', {description: data.description, sender:data.sender});
+        socket.to(data.to).emit('sdp', {description: data.description, sender:data.sender});
     });
 
 
     socket.on('ice candidates', (data)=>{
-        socket.to(data.room).emit('ice candidates', {candidate:data.candidate});
+        socket.to(data.to).emit('ice candidates', {candidate:data.candidate});
     });
 }
 
