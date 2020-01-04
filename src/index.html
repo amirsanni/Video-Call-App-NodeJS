@@ -155,7 +155,7 @@
                         socket.emit('ice candidates', {candidate: candidate, to:partnerName, sender:username});
                     };
 
-                    console.log(pc[partnerName]);
+
 
                     //add
                     pc[partnerName].ontrack = (e)=>{console.log('track available')
@@ -180,11 +180,15 @@
 
 
 
-                    pc[partnerName].onconnectionstatechange = ()=>{};
+                    pc[partnerName].onconnectionstatechange = (d)=>{
+                        console.log(d);
+                    };
 
 
 
-                    pc[partnerName].onsignalingstatechange = ()=>{};
+                    pc[partnerName].onsignalingstatechange = (d)=>{
+                        console.log(d);
+                    };
                 }
 
                 
