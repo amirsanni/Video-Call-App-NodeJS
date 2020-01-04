@@ -31,25 +31,25 @@
                 });
 
 
-                socket.on('new user', (data)=>{console.log('new user joined: '+data)
+                socket.on('new user', (data)=>{console.log(data)
                     socket.emit('newUserStart', {to:data.username, sender:username});
                     pc.push(data.username);
                     init(true, data.username);
                 });
 
 
-                socket.on('newUserStart', (data)=>{console.log('new user prompted to start: '+data)
+                socket.on('newUserStart', (data)=>{console.log(data)
                     pc.push(data.sender);
                     init(false, data.sender);
                 });
 
 
-                socket.on('ice candidates', async (data)=>{console.log('ice received: '+data)
+                socket.on('ice candidates', async (data)=>{console.log(data)
                     data.candidate ? await pc[data.sender].addIceCandidate(new RTCIceCandidate(data.candidate)) : '';
                 });
 
 
-                socket.on('sdp', async (data)=>{console.log('sdp received: '+ data)
+                socket.on('sdp', async (data)=>{console.log(data)
                     if(data.description.type === 'offer'){console.log('sdp is offer')
                         await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description));
 
