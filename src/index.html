@@ -182,12 +182,14 @@
 
                     pc[partnerName].onconnectionstatechange = (d)=>{
                         console.log(d);
+                        console.log(pc[partnerName].iceConnectionState);
                     };
 
 
 
                     pc[partnerName].onsignalingstatechange = (d)=>{
                         console.log(d);
+                        console.log(pc[partnerName].signalingState);
                     };
                 }
 
