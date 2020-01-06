@@ -134,7 +134,7 @@ window.addEventListener('load', ()=>{
                 newVid.height = 300;
 
                 //put video in div
-                div.innerHTML(newVid);
+                div.innerHTML = newVid;
                 
                 //put div in videos elem
                 document.getElementById('videos').appendChild(div);
