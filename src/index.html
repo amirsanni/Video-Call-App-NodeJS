@@ -1,215 +1,37 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title></title>
+        <title>Multi-User Video Call</title>
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href='assets/css/app.css' rel='stylesheet' type="text/css">
 
         <script src='/socket.io/socket.io.js'></script>
+        <script type="module" src='assets/js/rtc.js'></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/7.3.0/adapter.min.js" integrity="sha256-2qQheewaqnZlXJ3RJRghVUwD/3fD9HNqxh4C+zvgmF4=" crossorigin="anonymous"></script>
     </head>
 
     <body>
-        <h2>Video Call</h2>
-        <div id='videos'>
-            <video id='local' height="300" autoplay muted></video>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-12 text-center h2">Video Call</div>
+                    </div>
+        
+                    <div class="row">
+                        <div class="col-md-12" id='videos'>
+                            <video id='local' volume='0' autoplay muted></video>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 chat-col bg-secondary text-white">
+                    <div class="row">
+                        <div class="col-12 text-center h2">CHAT</div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-
-        <script>
-            window.addEventListener('load', ()=>{
-                const room = getQString(location.href, 'room');
-                const streamConstraints = {video:true, audio:true};
-                var pc = [];
-
-                let socket = io('/stream');
-
-                var username = '';
-
-                socket.on('connect', ()=>{
-                    //set username
-                    username = socket.io.engine.id;
-                
-
-                    socket.emit('subscribe', {
-                        room: room,
-                        username: username
-                    });
-
-
-                    socket.on('new user', (data)=>{
-                        socket.emit('newUserStart', {to:data.username, sender:username});
-                        pc.push(data.username);
-                        init(true, data.username);
-                    });
-
-
-                    socket.on('newUserStart', (data)=>{
-                        pc.push(data.sender);
-                        init(false, data.sender);
-                    });
-
-
-                    socket.on('ice candidates', async (data)=>{
-                        data.candidate ? await pc[data.sender].addIceCandidate(new RTCIceCandidate(data.candidate)) : '';
-                    });
-
-
-                    socket.on('sdp', async (data)=>{
-                        if(data.description.type === 'offer'){
-                            await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description));
-
-                            navigator.mediaDevices.getUserMedia(streamConstraints).then(async (stream)=>{
-                                if(!document.getElementById('local').srcObject){
-                                    document.getElementById('local').srcObject = stream;
-                                }
-
-                                stream.getTracks().forEach((track)=>{
-                                    pc[data.sender].addTrack(track, stream);
-                                });
-
-                                let answer = await pc[data.sender].createAnswer();
-                                
-                                await pc[data.sender].setLocalDescription(answer);
-
-                                socket.emit('sdp', {description:pc[data.sender].localDescription, to:data.sender, sender:username});
-                            }).catch((e)=>{
-                                console.error(e);
-                            });
-                        }
-
-                        else if(data.description.type === 'answer'){
-                            await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description));
-                        }
-                    });
-                })
-
-
-                function getQString(url='', keyToReturn=''){
-                    url = url ? url : location.href;
-                    let queryStrings = decodeURIComponent(url).split('#', 2)[0].split('?', 2)[1];
-                    
-                    if(queryStrings){
-                        let splittedQStrings = queryStrings.split('&');
-                        
-                        if(splittedQStrings.length){
-                            let queryStringObj = {};
-                            
-                            splittedQStrings.forEach(function(keyValuePair){
-                                let keyValue = keyValuePair.split('=', 2);
-                                
-                                if(keyValue.length){
-                                    queryStringObj[keyValue[0]] = keyValue[1];
-                                }
-                            });            
-                            
-                            return keyToReturn ? (queryStringObj[keyToReturn] ? queryStringObj[keyToReturn] : null) : queryStringObj;
-                        }
-                        
-                        return null;
-                    }
-                    
-                    return null;
-                }
-
-                function init(createOffer, partnerName){
-                    pc[partnerName] = new RTCPeerConnection({iceServers: [{   urls: [ "stun:eu-turn4.xirsys.com" ]}, {   username: "ml0jh0qMKZKd9P_9C0UIBY2G0nSQMCFBUXGlk6IXDJf8G2uiCymg9WwbEJTMwVeiAAAAAF2__hNSaW5vbGVl",   credential: "4dd454a6-feee-11e9-b185-6adcafebbb45",   urls: [       "turn:eu-turn4.xirsys.com:80?transport=udp",       "turn:eu-turn4.xirsys.com:3478?transport=udp",       "turn:eu-turn4.xirsys.com:80?transport=tcp",       "turn:eu-turn4.xirsys.com:3478?transport=tcp",       "turns:eu-turn4.xirsys.com:443?transport=tcp",       "turns:eu-turn4.xirsys.com:5349?transport=tcp"   ]}]});
-                    
-                    navigator.mediaDevices.getUserMedia(streamConstraints).then((stream)=>{
-                        stream.getTracks().forEach((track)=>{
-                            pc[partnerName].addTrack(track, stream);//should trigger negotiationneeded event
-                        });
-
-                        document.getElementById('local').srcObject = stream;
-                    }).catch((e)=>{
-                        console.error(`stream error: ${e}`);
-                    });
-
-
-
-                    //create offer
-                    pc[partnerName].onnegotiationneeded = async ()=>{
-                        let offer = await pc[partnerName].createOffer();
-                        
-                        await pc[partnerName].setLocalDescription(offer);
-
-                        socket.emit('sdp', {description:pc[partnerName].localDescription, to:partnerName, sender:username});
-                    };
-
-
-
-                    //send ice candidate to partnerNames
-                    pc[partnerName].onicecandidate = ({candidate})=>{
-                        socket.emit('ice candidates', {candidate: candidate, to:partnerName, sender:username});
-                    };
-
-
-
-                    //add
-                    pc[partnerName].ontrack = (e)=>{
-                        let str = e.streams[0];
-                        console.info('we have track', str);
-
-                        if(document.getElementById(partnerName)){
-                            document.getElementById(partnerName).srcObject = str;
-                        }
-
-                        else{
-                            let newVid = document.createElement('video');
-                            newVid.id = partnerName;
-                            newVid.srcObject = str;
-                            newVid.autoplay = true;
-                            newVid.height = 300;
-
-                            document.getElementById('videos').appendChild(newVid);
-                        }
-                    };
-
-
-
-                    pc[partnerName].onconnectionstatechange = (d)=>{
-                        console.log(pc[partnerName].iceConnectionState);
-                        switch(pc[partnerName].iceConnectionState){
-                            case 'disconnected':
-                            case 'failed':
-                                console.log("Ice connection state is failed/disconnected");
-                                closeVideo(partnerName);
-                                break;
-                                
-                            case 'closed':
-                                console.log("Ice connection state is 'closed'");
-                                closeVideo(partnerName);
-                                break;
-                        }
-                    };
-
-
-
-                    pc[partnerName].onsignalingstatechange = (d)=>{
-                        console.log(pc[partnerName].signalingState);
-                        switch(pc[partnerName].signalingState){
-                            case 'closed':
-                                console.log("Signalling state is 'closed'");
-                                closeVideo(partnerName);
-                                break;
-                        }
-                    };
-                }
-
-                
-                function closeVideo(elemId){
-                    if(document.getElementById(elemId)){
-                        document.getElementById(elemId).remove();
-                    }
-                }
-                // document.getElementById('pipBtn').addEventListener('click', ()=>{
-                //     if(document.pictureInPictureElement){
-                //         document.exitPictureInPicture();
-                //     }
-                    
-                //     else{
-                //         document.getElementById('vid').requestPictureInPicture();
-                //     }
-                // })
-            });
-        </script>
     </body>
 </html>
