@@ -24,8 +24,7 @@
 
                 const username = Math.random().toString(36).slice(2).substring(0, 15);
 
-                console.log('id: '+socket.id);
-                console.log('sid: '+socket.sid);
+                console.log(socket);
 
                 socket.emit('subscribe', {
                     room: room,
