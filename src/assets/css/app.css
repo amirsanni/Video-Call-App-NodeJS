@@ -1,0 +1,13 @@
+@media (min-width: 767px){
+    video{
+        height: 300px;
+        width: 400px;
+        border-color: aquamarine;
+    }
+
+    .chat-col{
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+}
