@@ -22,62 +22,64 @@
 
                 let socket = io('/stream');
 
-                const username = Math.random().toString(36).slice(2).substring(0, 15);
+                let username = null;
 
-                console.log(socket);
-                console.log(io);
+                socket.on('connect', ()=>{
+                    username = socket.io.engine.id;
+                
 
-                socket.emit('subscribe', {
-                    room: room,
-                    username: username
-                });
-
-
-                socket.on('new user', (data)=>{console.log(data);
-                    socket.emit('newUserStart', {to:data.username, sender:username});
-                    pc.push(data.username);
-                    init(true, data.username);
-                });
+                    socket.emit('subscribe', {
+                        room: room,
+                        username: username
+                    });
 
 
-                socket.on('newUserStart', (data)=>{
-                    pc.push(data.sender);
-                    init(false, data.sender);
-                });
+                    socket.on('new user', (data)=>{console.log(data);
+                        socket.emit('newUserStart', {to:data.username, sender:username});
+                        pc.push(data.username);
+                        init(true, data.username);
+                    });
 
 
-                socket.on('ice candidates', async (data)=>{
-                    data.candidate ? await pc[data.sender].addIceCandidate(new RTCIceCandidate(data.candidate)) : '';
-                });
+                    socket.on('newUserStart', (data)=>{
+                        pc.push(data.sender);
+                        init(false, data.sender);
+                    });
 
 
-                socket.on('sdp', async (data)=>{
-                    if(data.description.type === 'offer'){
-                        await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description));
+                    socket.on('ice candidates', async (data)=>{
+                        data.candidate ? await pc[data.sender].addIceCandidate(new RTCIceCandidate(data.candidate)) : '';
+                    });
 
-                        navigator.mediaDevices.getUserMedia(streamConstraints).then(async (stream)=>{
-                            if(!document.getElementById('local').srcObject){
-                                document.getElementById('local').srcObject = stream;
-                            }
 
-                            stream.getTracks().forEach((track)=>{
-                                pc[data.sender].addTrack(track, stream);
+                    socket.on('sdp', async (data)=>{
+                        if(data.description.type === 'offer'){
+                            await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description));
+
+                            navigator.mediaDevices.getUserMedia(streamConstraints).then(async (stream)=>{
+                                if(!document.getElementById('local').srcObject){
+                                    document.getElementById('local').srcObject = stream;
+                                }
+
+                                stream.getTracks().forEach((track)=>{
+                                    pc[data.sender].addTrack(track, stream);
+                                });
+
+                                let answer = await pc[data.sender].createAnswer();
+                                
+                                await pc[data.sender].setLocalDescription(answer);
+
+                                socket.emit('sdp', {description:pc[data.sender].localDescription, to:data.sender, sender:username});
+                            }).catch((e)=>{
+                                console.error(e);
                             });
+                        }
 
-                            let answer = await pc[data.sender].createAnswer();
-                            
-                            await pc[data.sender].setLocalDescription(answer);
-
-                            socket.emit('sdp', {description:pc[data.sender].localDescription, to:data.sender, sender:username});
-                        }).catch((e)=>{
-                            console.error(e);
-                        });
-                    }
-
-                    else if(data.description.type === 'answer'){
-                        await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description));
-                    }
-                });
+                        else if(data.description.type === 'answer'){
+                            await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description));
+                        }
+                    });
+                })
 
 
                 function getQString(url='', keyToReturn=''){
