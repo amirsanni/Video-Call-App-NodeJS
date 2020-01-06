@@ -166,11 +166,11 @@
                         console.log(partnerName);
                         document.getElementById('remote').srcObject = e.streams[0];
 
-                        if(document.getElementById(partnerName).length){console.log('partner exists')
+                        if(document.getElementById(partnerName)){console.log('partner exists')
                             document.getElementById(partnerName).srcObject = str;
                         }
 
-                        else{
+                        else{console.log('new partner')
                             let newVid = document.createElement('video');
                             newVid.id = partnerName;
                             newVid.srcObject = str;
