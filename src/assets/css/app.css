@@ -1,4 +1,4 @@
-@media (min-width: 767px){
+/* @media (min-width: 767px){ */
     video{
         height: 300px;
         width: 400px;
@@ -10,4 +10,4 @@
         overflow-y: auto;
         overflow-x: hidden;
     }
-}
+/* } */
