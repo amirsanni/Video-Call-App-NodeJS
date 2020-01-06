@@ -122,13 +122,13 @@
 
                     //create offer
                     pc[partnerName].onnegotiationneeded = async ()=>{console.log('neg needed');
-                        // if(createOffer){
+                        if(createOffer){
                             let offer = await pc[partnerName].createOffer();
                             
                             await pc[partnerName].setLocalDescription(offer);
 
                             socket.emit('sdp', {description:pc[partnerName].localDescription, to:partnerName, sender:username});
-                        // }
+                        }
                     };
                     // if(createOffer){console.log('create offer is true')
                     //     pc[partnerName].createOffer().then((offer)=>{console.log('Offer created')

@@ -22,7 +22,7 @@ const stream = (socket)=>{
 
 
     socket.on('ice candidates', (data)=>{
-        socket.to(data.to).emit('ice candidates', {candidate:data.candidate});
+        socket.to(data.to).emit('ice candidates', {candidate:data.candidate, sender:data.sender});
     });
 }
 
