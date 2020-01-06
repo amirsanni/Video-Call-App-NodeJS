@@ -22,9 +22,10 @@
 
                 let socket = io('/stream');
 
-                var username = '';//Math.random().toString(36).slice(2).substring(0, 15);//null;
+                var username = '';
 
                 socket.on('connect', ()=>{
+                    //set username
                     username = socket.io.engine.id;
                 
 
@@ -34,7 +35,7 @@
                     });
 
 
-                    socket.on('new user', (data)=>{console.log(data);
+                    socket.on('new user', (data)=>{
                         socket.emit('newUserStart', {to:data.username, sender:username});
                         pc.push(data.username);
                         init(true, data.username);
@@ -119,7 +120,7 @@
 
                         document.getElementById('local').srcObject = stream;
                     }).catch((e)=>{
-                        console.log(`stream error: ${e}`);
+                        console.error(`stream error: ${e}`);
                     });
 
 
