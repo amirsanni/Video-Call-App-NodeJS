@@ -116,18 +116,28 @@ window.addEventListener('load', ()=>{
         //add
         pc[partnerName].ontrack = (e)=>{
             let str = e.streams[0];
-            if(document.getElementById(partnerName)){
-                document.getElementById(partnerName).srcObject = str;
+            if(document.getElementById(`${partnerName}-video`)){
+                document.getElementById(`${partnerName}-video`).srcObject = str;
             }
 
             else{
+                //create a new div for
+                let div = document.createElement('div');
+                div.className = 'col-sm-12 col-md-4';
+                div.id = partnerName;
+
+                //video elem
                 let newVid = document.createElement('video');
-                newVid.id = partnerName;
+                newVid.id = `${partnerName}-video`;            
                 newVid.srcObject = str;
                 newVid.autoplay = true;
                 newVid.height = 300;
 
-                document.getElementById('videos').appendChild(newVid);
+                //put video in div
+                div.html(newVid);
+                
+                //put div in videos elem
+                document.getElementById('videos').appendChild(div);
             }
         };
 
