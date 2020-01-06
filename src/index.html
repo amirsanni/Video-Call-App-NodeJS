@@ -32,7 +32,7 @@
                 });
 
 
-                socket.on('new user', (data)=>{console.log(data);
+                socket.on('new user', (data)=>{console.log(socket.id);
                     socket.emit('newUserStart', {to:data.username, sender:username});
                     pc.push(data.username);
                     init(true, data.username);
