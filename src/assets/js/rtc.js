@@ -8,7 +8,10 @@ window.addEventListener('load', ()=>{
     const room = h.getQString(location.href, 'room');
     
     const streamConstraints = {
-        video: true, 
+        video: {
+            height: 300,
+            width: '100%'
+        }, 
         audio: {
             echoCancellation: true
         }
