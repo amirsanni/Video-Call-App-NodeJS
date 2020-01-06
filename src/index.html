@@ -22,10 +22,10 @@
 
                 let socket = io('/stream');
 
-                let username = Math.random().toString(36).slice(2).substring(0, 15);//null;
+                var username = '';//Math.random().toString(36).slice(2).substring(0, 15);//null;
 
                 socket.on('connect', ()=>{
-                    // username = socket.io.engine.id;
+                    username = socket.io.engine.id;
                 
 
                     socket.emit('subscribe', {
