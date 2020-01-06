@@ -24,7 +24,8 @@
 
                 const username = Math.random().toString(36).slice(2).substring(0, 15);
 
-                console.log(socket.id);
+                console.log(socket);
+                console.log(io);
 
                 socket.emit('subscribe', {
                     room: room,
@@ -32,7 +33,7 @@
                 });
 
 
-                socket.on('new user', (data)=>{console.log(socket.id);
+                socket.on('new user', (data)=>{console.log(data);
                     socket.emit('newUserStart', {to:data.username, sender:username});
                     pc.push(data.username);
                     init(true, data.username);
