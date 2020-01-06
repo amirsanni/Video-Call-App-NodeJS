@@ -127,35 +127,32 @@
 
                     //create offer
                     pc[partnerName].onnegotiationneeded = async ()=>{
-                        // if(createOffer){
-                            let offer = await pc[partnerName].createOffer();
-                            
-                            await pc[partnerName].setLocalDescription(offer);
+                        let offer = await pc[partnerName].createOffer();
+                        
+                        await pc[partnerName].setLocalDescription(offer);
 
-                            socket.emit('sdp', {description:pc[partnerName].localDescription, to:partnerName, sender:username});
-                        // }
+                        socket.emit('sdp', {description:pc[partnerName].localDescription, to:partnerName, sender:username});
                     };
 
 
 
                     //send ice candidate to partnerNames
-                    pc[partnerName].onicecandidate = ({candidate})=>{console.log('ice available')
+                    pc[partnerName].onicecandidate = ({candidate})=>{
                         socket.emit('ice candidates', {candidate: candidate, to:partnerName, sender:username});
                     };
 
 
 
                     //add
-                    pc[partnerName].ontrack = (e)=>{console.log('track available')
+                    pc[partnerName].ontrack = (e)=>{
                         let str = e.streams[0];
                         console.info('we have track', str);
-                        console.log(partnerName);
 
-                        if(document.getElementById(partnerName)){console.log('partner exists')
+                        if(document.getElementById(partnerName)){
                             document.getElementById(partnerName).srcObject = str;
                         }
 
-                        else{console.log('new partner')
+                        else{
                             let newVid = document.createElement('video');
                             newVid.id = partnerName;
                             newVid.srcObject = str;
@@ -169,19 +166,40 @@
 
 
                     pc[partnerName].onconnectionstatechange = (d)=>{
-                        console.log(d);
                         console.log(pc[partnerName].iceConnectionState);
+                        switch(pc[partnerName].iceConnectionState){
+                            case 'disconnected':
+                            case 'failed':
+                                console.log("Ice connection state is failed/disconnected");
+                                closeVideo(partnerName);
+                                break;
+                                
+                            case 'closed':
+                                console.log("Ice connection state is 'closed'");
+                                closeVideo(partnerName);
+                                break;
+                        }
                     };
 
 
 
                     pc[partnerName].onsignalingstatechange = (d)=>{
-                        console.log(d);
                         console.log(pc[partnerName].signalingState);
+                        switch(pc[partnerName].signalingState){
+                            case 'closed':
+                                console.log("Signalling state is 'closed'");
+                                closeVideo(partnerName);
+                                break;
+                        }
                     };
                 }
 
                 
+                function closeVideo(elemId){
+                    if(document.getElementById(elemId)){
+                        document.getElementById(elemId).remove();
+                    }
+                }
                 // document.getElementById('pipBtn').addEventListener('click', ()=>{
                 //     if(document.pictureInPictureElement){
                 //         document.exitPictureInPicture();
