@@ -10,7 +10,7 @@ window.addEventListener('load', ()=>{
     const streamConstraints = {
         video: {
             height: 300,
-            width: '100%'
+            width: 400
         }, 
         audio: {
             echoCancellation: true
