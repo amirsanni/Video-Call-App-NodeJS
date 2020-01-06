@@ -163,13 +163,14 @@
                     pc[partnerName].ontrack = (e)=>{console.log('track available')
                         let str = e.streams[0];
                         console.info('we have track', str);
+                        console.log(partnerName);
                         document.getElementById('remote').srcObject = e.streams[0];
 
                         if(document.getElementById(partnerName).length){console.log('partner exists')
                             document.getElementById(partnerName).srcObject = str;
                         }
 
-                        else{console.log(partnerName)
+                        else{
                             let newVid = document.createElement('video');
                             newVid.id = partnerName;
                             newVid.srcObject = str;
