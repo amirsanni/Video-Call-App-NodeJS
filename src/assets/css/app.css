@@ -1,14 +1,5 @@
-/* @media (min-width: 767px){ */
-    /* video{
-        height: 300px !important;
-        width: 400px !important;
-        border: 2px;
-        border-color: aquamarine;
-    } */
-
-    .chat-col{
-        height: 100vh;
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-/* } */
+.chat-col{
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
