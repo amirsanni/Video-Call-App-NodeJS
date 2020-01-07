@@ -1,7 +1,8 @@
 /* @media (min-width: 767px){ */
     video{
-        height: 300px;
-        width: 400px;
+        height: 300px !important;
+        width: 400px !important;
+        border: 2px;
         border-color: aquamarine;
     }
 
