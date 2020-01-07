@@ -125,8 +125,7 @@ window.addEventListener('load', ()=>{
                 let div = document.createElement('div');
                 div.className = 'col-sm-12 col-md-6';
                 div.id = partnerName;
-                div.style.border = '2px';
-                div.style.borderColor = 'black';
+                div.className = 'video-div';
 
                 //video elem
                 let newVid = document.createElement('video');
