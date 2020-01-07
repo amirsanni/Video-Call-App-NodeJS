@@ -4,21 +4,27 @@
         <title>Multi-User Video Call</title>
 
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <link rel='stylesheet' href='assets/css/app.css' type="text/css">
 
         <script src='/socket.io/socket.io.js'></script>
         <script type="module" src='assets/js/rtc.js'></script>
+        <script src='assets/js/events.js'></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/7.3.0/adapter.min.js" integrity="sha256-2qQheewaqnZlXJ3RJRghVUwD/3fD9HNqxh4C+zvgmF4=" crossorigin="anonymous"></script>
     </head>
 
     <body>
+        <nav class="navbar fixed-top bg-secondary rounded-0 d-print-none">
+            <div class="text-white">Video Call</div>
+            
+            <button id='toggle-chat-pane' class="btn btn-sm btn-info text-white pull-right d-md-none">
+                <i class="fa fa-bars"></i>
+            </button>
+        </nav>
+
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12 col-md-9 mt-3 mb-3">
-                    <div class="row">
-                        <div class="col-12 text-center h2">Video Call</div>
-                    </div>
-        
+                <div class="col-sm-9 mt-3 mb-3 main">
                     <div class="row" id='videos'>
                         <div class="col-sm-12 col-md-6">
                             <div class="card mb-3">
@@ -28,9 +34,15 @@
                     </div>
                 </div>
 
-                <div class="col-md-3 d-none d-md-block chat-col bg-secondary text-white">
+                <div class="col-sm-3 chat-col d-print-none mb-2 bg-secondary" id='chat-pane'>
                     <div class="row">
-                        <div class="col-12 text-center h2">CHAT</div>
+                        <div class="col-12 text-center h2 mb-3">CHAT</div>
+                    </div>
+
+                    <div class="row chat-row"></div>
+
+                    <div class="row">
+                        <textarea class="form-control rounded-0 chat-box" rows='3' placeholder="Type here..."></textarea>
                     </div>
                 </div>
             </div>

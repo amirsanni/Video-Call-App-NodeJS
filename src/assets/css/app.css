@@ -1,12 +1,86 @@
 .chat-col{
-    height: 100vh;
-    overflow-y: auto;
-    overflow-x: hidden;
+    right: 0;
+    bottom: 0;
+    top: 40.5px;
+    z-index: 1000;
     position: fixed;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
+    color: #fff;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 40px;
+    padding-top: 15px;
+    min-height: 100vh;
+}
+
+.chat-col li a{
+    color: #fff;
+}
+
+.chat-col li a:hover{
+    color: #000;
+}
+
+.chat-col::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;
+}
+
+.chat-box{
+    bottom: 30px;
+    right: 0;
+    position: absolute;
+    border: 0;
+    border-top: 1px groove white;
+    border-left: 1px groove white;
+    font-size: small;
+}
+
+.chat-box::placeholder{
+    font-size: small;
+    font-weight: lighter;
+    font-style: italic;
+}
+
+.chat-row{
+    height: 100%;
+    overflow-x: scroll;
 }
 
 
 video{
     position: relative;
     object-fit: cover !important;
+}
+
+.main{
+    padding-top: 40px;
+}
+
+
+@media only screen and (max-width:767px){
+    .chat-col{
+        right: -100vw;
+        width: 100vw;
+        z-index: 99999;
+        transition: 0.3s;
+        top: 47px;
+        padding-bottom: 60px;
+    }
+
+    .chat-col.chat-opened {
+        right: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        transition: all 0.3s ease !important;
+        -webkit-transition: all 0.3s ease !important;
+        -moz-transition: all 0.3s ease !important;
+    }
+  
+    .chat-opened::-webkit-scrollbar {
+        display: none;
+    }
 }
