@@ -54,6 +54,7 @@
 video{
     position: relative;
     object-fit: cover !important;
+    height: 300px;
 }
 
 .main{
@@ -82,5 +83,9 @@ video{
   
     .chat-opened::-webkit-scrollbar {
         display: none;
+    }
+
+    video{
+        height: 200px;
     }
 }

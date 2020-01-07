@@ -128,7 +128,6 @@ window.addEventListener('load', ()=>{
                 newVid.id = `${partnerName}-video`;            
                 newVid.srcObject = str;
                 newVid.autoplay = true;
-                newVid.height = 300;
                 
                 //create a new div for card
                 let cardDiv = document.createElement('div');
