@@ -48,6 +48,14 @@ window.addEventListener('load', ()=>{
             data.candidate ? await pc[data.sender].addIceCandidate(new RTCIceCandidate(data.candidate)) : '';
         });
 
+        navigator.mediaDevices.getUserMedia(streamConstraints).then(async (stream)=>{
+            if(!document.getElementById('local').srcObject){
+                document.getElementById('local').srcObject = stream;
+            }
+        }).catch((e)=>{
+            console.error(e);
+        });
+
 
         socket.on('sdp', async (data)=>{
             if(data.description.type === 'offer'){
@@ -128,6 +136,7 @@ window.addEventListener('load', ()=>{
                 newVid.id = `${partnerName}-video`;            
                 newVid.srcObject = str;
                 newVid.autoplay = true;
+                newVid.className = 'remote-video';
                 
                 //create a new div for card
                 let cardDiv = document.createElement('div');

@@ -51,7 +51,7 @@
 }
 
 
-video{
+.remote-video{
     position: relative;
     object-fit: cover !important;
     height: 300px;
@@ -59,6 +59,14 @@ video{
 
 .main{
     padding-top: 40px;
+}
+
+.local-video{
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    height: 200px;
+    width: 300px;
 }
 
 
@@ -85,7 +93,12 @@ video{
         display: none;
     }
 
-    video{
+    .remote-video{
         height: 200px;
+    }
+
+    .local-video{
+        height: 80px;
+        width: 100px;
     }
 }
