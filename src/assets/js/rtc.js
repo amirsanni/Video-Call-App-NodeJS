@@ -132,6 +132,7 @@ window.addEventListener('load', ()=>{
                 newVid.srcObject = str;
                 newVid.autoplay = true;
                 newVid.height = 300;
+                newVid.width = 300;
 
                 //put video in div
                 div.appendChild(newVid);
