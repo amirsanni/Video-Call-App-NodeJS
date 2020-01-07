@@ -132,7 +132,7 @@ window.addEventListener('load', ()=>{
                 
                 //create a new div for card
                 let cardDiv = document.createElement('div');
-                cardDiv.className = 'card';
+                cardDiv.className = 'card mb-2';
                 cardDiv.appendChild(newVid);
                 
                 //create a new div for everything
