@@ -123,8 +123,10 @@ window.addEventListener('load', ()=>{
             else{
                 //create a new div for
                 let div = document.createElement('div');
-                div.className = 'col-sm-12 col-md-4';
+                div.className = 'col-sm-12 col-md-6';
                 div.id = partnerName;
+                div.style.border = '2px';
+                div.style.borderColor = 'black';
 
                 //video elem
                 let newVid = document.createElement('video');
@@ -133,6 +135,7 @@ window.addEventListener('load', ()=>{
                 newVid.autoplay = true;
                 newVid.height = 300;
                 newVid.width = 300;
+                // newVid.style.position = 'absolute';
 
                 //put video in div
                 div.appendChild(newVid);
