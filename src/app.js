@@ -11,6 +11,12 @@ app.get('/', (req, res)=>{
     res.sendFile(__dirname+'/index.html');
 });
 
+
+app.get('/ice', (req, res)=>{
+    //talk to xirsys api to get turn and stun
+});
+
+
 io.of('/stream').on('connection', stream);
 
 server.listen(3000);
