@@ -76,7 +76,9 @@ window.addEventListener('load', ()=>{
                 await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description));
             }
         });
-    })
+    });
+
+
 
     function init(createOffer, partnerName){
         pc[partnerName] = new RTCPeerConnection({iceServers: [{   urls: [ "stun:eu-turn4.xirsys.com" ]}, {   username: "ml0jh0qMKZKd9P_9C0UIBY2G0nSQMCFBUXGlk6IXDJf8G2uiCymg9WwbEJTMwVeiAAAAAF2__hNSaW5vbGVl",   credential: "4dd454a6-feee-11e9-b185-6adcafebbb45",   urls: [       "turn:eu-turn4.xirsys.com:80?transport=udp",       "turn:eu-turn4.xirsys.com:3478?transport=udp",       "turn:eu-turn4.xirsys.com:80?transport=tcp",       "turn:eu-turn4.xirsys.com:3478?transport=tcp",       "turns:eu-turn4.xirsys.com:443?transport=tcp",       "turns:eu-turn4.xirsys.com:5349?transport=tcp"   ]}]});
@@ -121,23 +123,23 @@ window.addEventListener('load', ()=>{
             }
 
             else{
-                //create a new div for
-                let div = document.createElement('div');
-                div.className = 'col-sm-12 col-md-6';
-                div.id = partnerName;
-                div.className = 'video-div';
-
                 //video elem
                 let newVid = document.createElement('video');
                 newVid.id = `${partnerName}-video`;            
                 newVid.srcObject = str;
                 newVid.autoplay = true;
                 newVid.height = 300;
-                newVid.width = 300;
-                newVid.style.position = 'absolute';
-
-                //put video in div
-                div.appendChild(newVid);
+                
+                //create a new div for card
+                let cardDiv = document.createElement('div');
+                cardDiv.className = 'card';
+                cardDiv.appendChild(newVid);
+                
+                //create a new div for everything
+                let div = document.createElement('div');
+                div.className = 'col-sm-12 col-md-6';
+                div.id = partnerName;
+                div.appendChild(cardDiv);
                 
                 //put div in videos elem
                 document.getElementById('videos').appendChild(div);

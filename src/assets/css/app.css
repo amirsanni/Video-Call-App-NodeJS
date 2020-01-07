@@ -4,6 +4,8 @@
     overflow-x: hidden;
 }
 
-.video-div{
-    border: 2px solid black;
+
+video{
+    position: relative;
+    object-fit: cover !important;
 }
