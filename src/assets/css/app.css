@@ -67,6 +67,7 @@
     position: fixed;
     height: 100px;
     width: 200px;
+    z-index: 1000;
 }
 
 
