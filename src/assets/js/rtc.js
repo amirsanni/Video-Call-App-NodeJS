@@ -8,10 +8,6 @@ window.addEventListener('load', ()=>{
     const room = h.getQString(location.href, 'room');
 
     if(room){
-        h.getUserMedia().then((stream)=>{
-            document.getElementById('local').srcObject = stream;
-        });
-
         var pc = [];
 
         let socket = io('/stream');
