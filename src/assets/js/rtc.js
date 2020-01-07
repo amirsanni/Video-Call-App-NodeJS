@@ -135,7 +135,7 @@ window.addEventListener('load', ()=>{
                 newVid.autoplay = true;
                 newVid.height = 300;
                 newVid.width = 300;
-                // newVid.style.position = 'absolute';
+                newVid.style.position = 'absolute';
 
                 //put video in div
                 div.appendChild(newVid);
