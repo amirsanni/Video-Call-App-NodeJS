@@ -6,29 +6,91 @@ import h from './helpers.js';
 
 window.addEventListener('load', ()=>{
     const room = h.getQString(location.href, 'room');
+    const username = localStorage.getItem('username');
 
-    if(room){
+    if(!room){
+        document.querySelector('#room-create').attributes.removeNamedItem('hidden');
+
+        document.getElementById('create-room').addEventListener('click', (e)=>{
+            e.preventDefault();
+
+            let roomName = document.querySelector('#room-name').value;
+            let yourName = document.querySelector('#your-name').value;
+
+            if(roomName && yourName){
+                //remove error message, if any
+                document.querySelector('#err-msg').innerHTML = "";
+
+                //save the user's name in localStorage
+                localStorage.setItem('username', yourName);
+
+                //create room link
+                let roomLink = `${location.origin}?room=${roomName.trim().replace(' ', '_')}_${h.generateRandomString()}`;
+
+                //show message with link to room
+                document.querySelector('#room-created').innerHTML = `Room successfully created. Click <a href='${roomLink}'>here</a> to enter room. 
+                    Share the room link with your partners.`;
+
+                //empty the values
+                document.querySelector('#room-name').value = '';
+                document.querySelector('#your-name').value = '';
+            }
+
+            else{
+                document.querySelector('#err-msg').innerHTML = "All fields are required";
+            }
+        });
+    }
+
+    else if(!username){
+        document.querySelector('#username-set').attributes.removeNamedItem('hidden');
+
+        document.getElementById('enter-room').addEventListener('click', (e)=>{
+            e.preventDefault();
+
+            let name = document.querySelector('#username').value;
+
+            if(name){
+                //remove error message, if any
+                document.querySelector('#err-msg-username').innerHTML = "";
+
+                //save the user's name in localStorage
+                localStorage.setItem('username', name);
+
+                //reload room
+                location.href = `${location.origin}?room=${room}`;
+            }
+
+            else{
+                document.querySelector('#err-msg-username').innerHTML = "Please input your name";
+            }
+        });
+    }
+
+    else{
+        document.querySelector('#room-comm').attributes.removeNamedItem('hidden');
+
         var pc = [];
 
         let socket = io('/stream');
 
-        var username = '';
+        var socketId = '';
 
         socket.on('connect', ()=>{
-            //set username
-            username = socket.io.engine.id;
+            //set socketId
+            socketId = socket.io.engine.id;
         
 
             socket.emit('subscribe', {
                 room: room,
-                username: username
+                socketId: socketId
             });
 
 
             socket.on('new user', (data)=>{
-                socket.emit('newUserStart', {to:data.username, sender:username});
-                pc.push(data.username);
-                init(true, data.username);
+                socket.emit('newUserStart', {to:data.socketId, sender:socketId});
+                pc.push(data.socketId);
+                init(true, data.socketId);
             });
 
 
@@ -60,7 +122,7 @@ window.addEventListener('load', ()=>{
                         
                         await pc[data.sender].setLocalDescription(answer);
 
-                        socket.emit('sdp', {description:pc[data.sender].localDescription, to:data.sender, sender:username});
+                        socket.emit('sdp', {description:pc[data.sender].localDescription, to:data.sender, sender:socketId});
                     }).catch((e)=>{
                         console.error(e);
                     });
@@ -70,7 +132,28 @@ window.addEventListener('load', ()=>{
                     await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description));
                 }
             });
+
+
+            socket.on('chat', (data)=>{console.log('remote chat');
+                h.addChat(data, 'remote');
+            })
         });
+
+
+        function sendMsg(msg){
+            let data = {
+                room: room,
+                msg: msg,
+                sender: username
+            };
+
+            //emit chat message
+            socket.emit('chat', data);
+
+
+            //add localchat
+            h.addChat(data, 'local');
+        }
 
 
 
@@ -96,7 +179,7 @@ window.addEventListener('load', ()=>{
                     
                     await pc[partnerName].setLocalDescription(offer);
 
-                    socket.emit('sdp', {description:pc[partnerName].localDescription, to:partnerName, sender:username});
+                    socket.emit('sdp', {description:pc[partnerName].localDescription, to:partnerName, sender:socketId});
                 };
             }
 
@@ -104,7 +187,7 @@ window.addEventListener('load', ()=>{
 
             //send ice candidate to partnerNames
             pc[partnerName].onicecandidate = ({candidate})=>{
-                socket.emit('ice candidates', {candidate: candidate, to:partnerName, sender:username});
+                socket.emit('ice candidates', {candidate: candidate, to:partnerName, sender:socketId});
             };
 
 
@@ -166,5 +249,18 @@ window.addEventListener('load', ()=>{
                 }
             };
         }
+
+
+        document.getElementById('chat-input').addEventListener('keypress', (e)=>{            
+            if(e.which === 13 && (e.target.value.trim())){
+                e.preventDefault();
+                
+                sendMsg(e.target.value);
+
+                setTimeout(()=>{
+                    e.target.value = '';
+                }, 50);
+            }
+        });
     }
 });

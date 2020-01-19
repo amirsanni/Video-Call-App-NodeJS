@@ -4,10 +4,6 @@
     top: 40.5px;
     z-index: 1000;
     position: fixed;
-    overflow-x: hidden;
-    overflow-y: auto;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* IE 10+ */
     color: #fff;
     padding-right: 5px;
     padding-left: 5px;
@@ -16,15 +12,17 @@
     min-height: 100vh;
 }
 
-.chat-col li a{
-    color: #fff;
+#chat-messages{
+    position: relative;
+    height: 70vh;
+    margin-bottom: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
 }
 
-.chat-col li a:hover{
-    color: #000;
-}
-
-.chat-col::-webkit-scrollbar {
+#chat-messages::-webkit-scrollbar {
     width: 0px;  /* remove scrollbar space */
     background: transparent;
 }
@@ -43,6 +41,12 @@
     font-size: small;
     font-weight: lighter;
     font-style: italic;
+}
+
+.chat-box,
+.chat-box:focus{
+    resize: none !important;
+    box-shadow: none !important;
 }
 
 .chat-row{
@@ -68,6 +72,26 @@
     height: 100px;
     width: 200px;
     z-index: 1000;
+}
+
+
+.sender-info{
+    font-size: smaller;
+    margin-top: 5px;
+    align-self: flex-end;
+}
+
+
+.msg{
+    font-weight: 400;
+    font-size: 12px;
+    color: black;
+    background-color: wheat;
+}
+
+
+.chat-card{
+    border-radius: 6px;
 }
 
 

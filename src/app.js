@@ -14,6 +14,11 @@ app.get('/', (req, res)=>{
 
 app.get('/ice', (req, res)=>{
     //talk to xirsys api to get turn and stun
+    let data = {format: "urls"};
+
+    fetch('', {
+        method: 'POST'
+    }).then().then().catch();
 });
 
 

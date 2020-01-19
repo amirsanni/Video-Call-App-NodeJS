@@ -1,4 +1,9 @@
 export default {
+    generateRandomString(){
+        return Math.random().toString(36).slice(2).substring(0, 15);
+    },
+
+
     closeVideo(elemId){
         if(document.getElementById(elemId)){
             document.getElementById(elemId).remove();
@@ -57,5 +62,38 @@ export default {
 
     getIceServer(){
         return {iceServers: [{   urls: [ "stun:eu-turn4.xirsys.com" ]}, {   username: "ml0jh0qMKZKd9P_9C0UIBY2G0nSQMCFBUXGlk6IXDJf8G2uiCymg9WwbEJTMwVeiAAAAAF2__hNSaW5vbGVl",   credential: "4dd454a6-feee-11e9-b185-6adcafebbb45",   urls: [       "turn:eu-turn4.xirsys.com:80?transport=udp",       "turn:eu-turn4.xirsys.com:3478?transport=udp",       "turn:eu-turn4.xirsys.com:80?transport=tcp",       "turn:eu-turn4.xirsys.com:3478?transport=tcp",       "turns:eu-turn4.xirsys.com:443?transport=tcp",       "turns:eu-turn4.xirsys.com:5349?transport=tcp"   ]}]};
+    },
+    
+    
+    addChat(data, senderType){
+        let contentAlign = 'justify-content-end';
+        let senderName = 'You';
+        let msgBg = 'bg-white';
+
+        if(senderType === 'remote'){
+            contentAlign = 'justify-content-start';
+            senderName = data.sender;
+            msgBg = '';
+        }
+
+        let infoDiv = document.createElement('div');
+        infoDiv.className = 'sender-info';
+        infoDiv.innerHTML = `${senderName} - ${moment().format('Do MMMM, YYYY h:mm a')}`;
+
+        let colDiv = document.createElement('div');
+        colDiv.className = `col-10 card chat-card msg ${msgBg}`;
+        colDiv.innerHTML =  data.msg;
+
+        let rowDiv = document.createElement('div');
+        rowDiv.className = `row ${contentAlign} mb-2`;
+
+
+        colDiv.appendChild(infoDiv);
+        rowDiv.appendChild(colDiv);
+
+        document.querySelector('#chat-messages').appendChild(rowDiv);
+
+        //move focus to the newly added message
+        rowDiv.scrollIntoView();
     }
 };
