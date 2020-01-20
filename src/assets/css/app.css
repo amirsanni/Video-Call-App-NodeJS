@@ -126,12 +126,7 @@
         width: 100px;
     }
 
-    #chat-messages{
-        height: 70vh;
-        margin-bottom: 20px;
-    }
-
     .chat-box{
-        bottom: 50px;
+        bottom: 70px;
     }
 }
