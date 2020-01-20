@@ -11,6 +11,11 @@ export default {
     },
 
 
+    pageHasFocus(){
+        return !(document.hidden || document.onfocusout || window.onpagehide || window.onblur);
+    },
+
+
     getQString(url='', keyToReturn=''){
         url = url ? url : location.href;
         let queryStrings = decodeURIComponent(url).split('#', 2)[0].split('?', 2)[1];
@@ -66,6 +71,7 @@ export default {
     
     
     addChat(data, senderType){
+        let chatMsgDiv = document.querySelector('#chat-messages');
         let contentAlign = 'justify-content-end';
         let senderName = 'You';
         let msgBg = 'bg-white';
@@ -91,9 +97,15 @@ export default {
         colDiv.appendChild(infoDiv);
         rowDiv.appendChild(colDiv);
 
-        document.querySelector('#chat-messages').appendChild(rowDiv);
+        chatMsgDiv.appendChild(rowDiv);
 
-        //move focus to the newly added message
-        rowDiv.scrollIntoView();
+        /**
+         * Move focus to the newly added message but only if:
+         * 1. Page has focus
+         * 2. User has not moved scrollbar upward. This is to prevent moving the scroll position if user is reading previous messages.
+         */
+        if(this.pageHasFocus){
+            rowDiv.scrollIntoView();
+        }
     }
 };

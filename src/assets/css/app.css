@@ -13,7 +13,6 @@
 }
 
 #chat-messages{
-    position: relative;
     height: 70vh;
     margin-bottom: 20px;
     overflow-x: hidden;
