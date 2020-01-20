@@ -1,2 +1,2 @@
-# livestream-server
-Server-side implementation of a livestream application
+# Video-Call-App-NodeJS
+A conference call implementation using WebRTC, Socket.io and Node.js.
