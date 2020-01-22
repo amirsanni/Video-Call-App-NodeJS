@@ -101,7 +101,6 @@
         z-index: 99999;
         transition: 0.3s;
         top: 47px;
-        padding-bottom: 60px;
     }
 
     .chat-col.chat-opened {
@@ -127,10 +126,11 @@
     }
 
     #chat-messages{
-        height: 55vh;
+        height: 60vh;
     }
 
     .chat-box{
-        bottom: 40px;
+        bottom: 90px;
+        margin-bottom: 0px;
     }
 }
