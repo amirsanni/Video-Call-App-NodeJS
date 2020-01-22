@@ -94,6 +94,11 @@
 }
 
 
+.btn-no-effect:focus{
+    box-shadow: none;
+}
+
+
 @media only screen and (max-width:767px){
     .chat-col{
         right: -100vw;

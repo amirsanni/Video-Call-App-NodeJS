@@ -19,10 +19,24 @@
     <body>
         <nav class="navbar fixed-top bg-info rounded-0 d-print-none">
             <div class="text-white">Video Call</div>
-            
-            <button id='toggle-chat-pane' class="btn btn-sm btn-info text-white pull-right d-md-none">
-                Chat
-            </button>
+
+            <div class="pull-right room-comm" hidden>
+                <button class="btn btn-sm rounded-0 btn-no-effect" id='toggle-video'>
+                    <i class="fa fa-video text-white"></i>
+                </button>
+
+                <button class="btn btn-sm rounded-0 btn-no-effect" id='toggle-mute'>
+                    <i class="fa fa-volume-up text-white"></i>
+                </button>
+
+                <button class="btn btn-sm text-white pull-right d-md-none btn-no-effect" id='toggle-chat-pane'>
+                    Chat
+                </button>
+
+                <button class="btn btn-sm rounded-0 btn-no-effect text-white">
+                    <a href="/" class="text-white text-decoration-none">Leave Room</a>
+                </button>
+            </div>
         </nav>
 
         <div class="container-fluid" id='room-create' hidden>
@@ -78,7 +92,7 @@
 
 
         
-        <div class="container-fluid" id='room-comm' hidden>
+        <div class="container-fluid room-comm" hidden>
             <div class="row">
                 <video class="local-video" id='local' volume='0' autoplay muted></video>
             </div>

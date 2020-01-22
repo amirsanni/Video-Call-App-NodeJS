@@ -68,13 +68,18 @@ window.addEventListener('load', ()=>{
     }
 
     else{
-        document.querySelector('#room-comm').attributes.removeNamedItem('hidden');
+        let commElem = document.getElementsByClassName('room-comm');
+
+        for(let i = 0; i < commElem.length; i++){
+            commElem[i].attributes.removeNamedItem('hidden');
+        }
 
         var pc = [];
 
         let socket = io('/stream');
 
         var socketId = '';
+        var myStream = '';
 
         socket.on('connect', ()=>{
             //set socketId
@@ -113,6 +118,9 @@ window.addEventListener('load', ()=>{
                         if(!document.getElementById('local').srcObject){
                             document.getElementById('local').srcObject = stream;
                         }
+
+                        //save my stream
+                        myStream = stream;
 
                         stream.getTracks().forEach((track)=>{
                             pc[data.sender].addTrack(track, stream);
@@ -161,6 +169,9 @@ window.addEventListener('load', ()=>{
             pc[partnerName] = new RTCPeerConnection(h.getIceServer());
             
             h.getUserMedia().then((stream)=>{
+                //save my stream
+                myStream = stream;
+
                 stream.getTracks().forEach((track)=>{
                     pc[partnerName].addTrack(track, stream);//should trigger negotiationneeded event
                 });
@@ -251,7 +262,7 @@ window.addEventListener('load', ()=>{
         }
 
 
-        document.getElementById('chat-input').addEventListener('keypress', (e)=>{            
+        document.getElementById('chat-input').addEventListener('keypress', (e)=>{
             if(e.which === 13 && (e.target.value.trim())){
                 e.preventDefault();
                 
@@ -261,6 +272,29 @@ window.addEventListener('load', ()=>{
                     e.target.value = '';
                 }, 50);
             }
+        });
+
+
+        document.getElementById('toggle-video').addEventListener('click', (e)=>{
+            e.preventDefault();
+
+            myStream.getVideoTracks()[0].enabled = !(myStream.getVideoTracks()[0].enabled);
+            // myStream.getVideoTracks()[0].stop();
+
+            //toggle video icon
+            e.srcElement.classList.toggle('fa-video');
+            e.srcElement.classList.toggle('fa-video-slash');
+        });
+
+
+        document.getElementById('toggle-mute').addEventListener('click', (e)=>{
+            e.preventDefault();
+
+            myStream.getAudioTracks()[0].enabled = !(myStream.getVideoTracks()[0].enabled);
+
+            //toggle audio icon
+            e.srcElement.classList.toggle('fa-volume-up');
+            e.srcElement.classList.toggle('fa-volume-mute');
         });
     }
 });
