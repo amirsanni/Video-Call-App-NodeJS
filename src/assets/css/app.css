@@ -126,7 +126,11 @@
         width: 100px;
     }
 
+    #chat-messages{
+        height: 55vh;
+    }
+
     .chat-box{
-        bottom: 90px;
+        bottom: 40px;
     }
 }
