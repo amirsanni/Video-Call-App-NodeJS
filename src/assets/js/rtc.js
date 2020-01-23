@@ -279,7 +279,6 @@ window.addEventListener('load', ()=>{
             e.preventDefault();
 
             myStream.getVideoTracks()[0].enabled = !(myStream.getVideoTracks()[0].enabled);
-            // myStream.getVideoTracks()[0].stop();
 
             //toggle video icon
             e.srcElement.classList.toggle('fa-video');
@@ -290,7 +289,7 @@ window.addEventListener('load', ()=>{
         document.getElementById('toggle-mute').addEventListener('click', (e)=>{
             e.preventDefault();
 
-            myStream.getAudioTracks()[0].enabled = !(myStream.getVideoTracks()[0].enabled);
+            myStream.getAudioTracks()[0].enabled = !(myStream.getAudioTracks()[0].enabled);
 
             //toggle audio icon
             e.srcElement.classList.toggle('fa-volume-up');
