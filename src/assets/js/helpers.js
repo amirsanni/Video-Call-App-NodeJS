@@ -80,7 +80,6 @@ export default {
             contentAlign = 'justify-content-start';
             senderName = data.sender;
             msgBg = '';
-            console.log('remote chat')
 
             this.toggleChatNotificationBadge();
         }
@@ -113,13 +112,13 @@ export default {
     },
 
 
-    toggleChatNotificationBadge(){console.log('called');
-        if(document.querySelector('#chat-pane').classList.contains('chat-opened')){console.log('hide')
+    toggleChatNotificationBadge(){
+        if(document.querySelector('#chat-pane').classList.contains('chat-opened')){
             document.querySelector('#new-chat-notification').setAttribute('hidden', true);
         }
 
         else{console.log('show')
-            document.querySelector('#new-chat-notification').setAttribute('hidden', false);
+            document.querySelector('#new-chat-notification').removeAttribute('hidden');
         }
     }
 };
