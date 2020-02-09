@@ -76,7 +76,7 @@ window.addEventListener('load', ()=>{
             sessionStorage.setItem('username', name);
 
             //reload room
-            location.href = `${location.origin}?room=${room}`;
+            location.reload();
         }
 
         else{
