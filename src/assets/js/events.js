@@ -10,7 +10,7 @@ window.addEventListener('load', ()=>{
             if(document.querySelector('#chat-pane').classList.contains('chat-opened')){
                 helpers.toggleChatNotificationBadge();
             }
-        }, 500);
+        }, 300);
     });
 
 
