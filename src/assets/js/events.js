@@ -6,7 +6,11 @@ window.addEventListener('load', ()=>{
         document.querySelector('#chat-pane').classList.toggle('chat-opened');
 
         //remove the 'New' badge on chat icon (if any) once chat is opened.
-        helpers.toggleChatNotificationBadge();
+        setTimeout(()=>{
+            if(document.querySelector('#chat-pane').classList.contains('chat-opened')){
+                helpers.toggleChatNotificationBadge();
+            }
+        }, 500);
     });
 
 

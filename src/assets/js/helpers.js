@@ -117,7 +117,7 @@ export default {
             document.querySelector('#new-chat-notification').setAttribute('hidden', true);
         }
 
-        else{console.log('show')
+        else{
             document.querySelector('#new-chat-notification').removeAttribute('hidden');
         }
     }
