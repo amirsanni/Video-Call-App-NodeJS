@@ -80,6 +80,8 @@ export default {
             contentAlign = 'justify-content-start';
             senderName = data.sender;
             msgBg = '';
+
+            this.toggleChatNotificationBadge();
         }
 
         let infoDiv = document.createElement('div');
@@ -106,6 +108,17 @@ export default {
          */
         if(this.pageHasFocus){
             rowDiv.scrollIntoView();
+        }
+    },
+
+
+    toggleChatNotificationBadge(){
+        if(document.querySelector('#chat-pane').classList.contains('chat-opened')){
+            document.querySelector('#new-chat-notification').setAttribute('hidden', true);
+        }
+
+        else{
+            document.querySelector('#new-chat-notification').setAttribute('hidden', false);
         }
     }
 };

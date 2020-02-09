@@ -10,61 +10,10 @@ window.addEventListener('load', ()=>{
 
     if(!room){
         document.querySelector('#room-create').attributes.removeNamedItem('hidden');
-
-        document.getElementById('create-room').addEventListener('click', (e)=>{
-            e.preventDefault();
-
-            let roomName = document.querySelector('#room-name').value;
-            let yourName = document.querySelector('#your-name').value;
-
-            if(roomName && yourName){
-                //remove error message, if any
-                document.querySelector('#err-msg').innerHTML = "";
-
-                //save the user's name in sessionStorage
-                sessionStorage.setItem('username', yourName);
-
-                //create room link
-                let roomLink = `${location.origin}?room=${roomName.trim().replace(' ', '_')}_${h.generateRandomString()}`;
-
-                //show message with link to room
-                document.querySelector('#room-created').innerHTML = `Room successfully created. Click <a href='${roomLink}'>here</a> to enter room. 
-                    Share the room link with your partners.`;
-
-                //empty the values
-                document.querySelector('#room-name').value = '';
-                document.querySelector('#your-name').value = '';
-            }
-
-            else{
-                document.querySelector('#err-msg').innerHTML = "All fields are required";
-            }
-        });
     }
 
     else if(!username){
         document.querySelector('#username-set').attributes.removeNamedItem('hidden');
-
-        document.getElementById('enter-room').addEventListener('click', (e)=>{
-            e.preventDefault();
-
-            let name = document.querySelector('#username').value;
-
-            if(name){
-                //remove error message, if any
-                document.querySelector('#err-msg-username').innerHTML = "";
-
-                //save the user's name in sessionStorage
-                sessionStorage.setItem('username', name);
-
-                //reload room
-                location.href = `${location.origin}?room=${room}`;
-            }
-
-            else{
-                document.querySelector('#err-msg-username').innerHTML = "Please input your name";
-            }
-        });
     }
 
     else{
@@ -142,7 +91,7 @@ window.addEventListener('load', ()=>{
             });
 
 
-            socket.on('chat', (data)=>{console.log('remote chat');
+            socket.on('chat', (data)=>{
                 h.addChat(data, 'remote');
             })
         });

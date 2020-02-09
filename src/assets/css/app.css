@@ -98,6 +98,10 @@
     box-shadow: none;
 }
 
+.very-small{
+    font-size: 6px !important;
+}
+
 
 @media only screen and (max-width:767px){
     .chat-col{
