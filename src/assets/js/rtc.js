@@ -241,8 +241,8 @@ window.addEventListener('load', ()=>{
             myStream.getAudioTracks()[0].enabled = !(myStream.getAudioTracks()[0].enabled);
 
             //toggle audio icon
-            e.srcElement.classList.toggle('fa-volume-up');
-            e.srcElement.classList.toggle('fa-volume-mute');
+            e.srcElement.classList.toggle('fa-microphone-alt');
+            e.srcElement.classList.toggle('fa-microphone-alt-slash');
         });
     }
 });
