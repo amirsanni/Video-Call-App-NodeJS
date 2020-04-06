@@ -134,7 +134,7 @@ window.addEventListener('load', ()=>{
 
 
             //create offer
-            if(createOffer){
+            // if(createOffer){
                 pc[partnerName].onnegotiationneeded = async ()=>{
                     let offer = await pc[partnerName].createOffer();
                     
@@ -142,7 +142,7 @@ window.addEventListener('load', ()=>{
 
                     socket.emit('sdp', {description:pc[partnerName].localDescription, to:partnerName, sender:socketId});
                 };
-            }
+            // }
 
 
 
@@ -226,7 +226,7 @@ window.addEventListener('load', ()=>{
 
                 //share the new stream with all partners
                 for(let p in pc){
-                    pc[p] = new RTCPeerConnection(h.getIceServer());
+                    pc[p] = new RTCPeerConnection(h.getIceServer(), null);
 
                     stream.getTracks().forEach((track)=>{
                         pc[p].addTrack(track, stream);//should trigger negotiationneeded event
@@ -249,7 +249,7 @@ window.addEventListener('load', ()=>{
 
                     //share the new stream with all partners
                     for(let p in pc){
-                        pc[p] = new RTCPeerConnection(h.getIceServer());
+                        pc[p] = new RTCPeerConnection(h.getIceServer(), null);
 
                         stream.getTracks().forEach((track)=>{
                             pc[p].addTrack(track, stream);//should trigger negotiationneeded event
@@ -277,7 +277,7 @@ window.addEventListener('load', ()=>{
                 videoIconElem.setAttribute('title', 'Show Video');
 
                 if(myStream && myStream.getVideoTracks().length){
-                    myStream.getVideoTracks().forEach(track => track.stop());
+                    myStream.getVideoTracks().forEach(track => track.remove());
                 }
 
                 res();
@@ -296,7 +296,7 @@ window.addEventListener('load', ()=>{
     
                     //share the new stream with all partners
                     for(let p in pc){
-                        pc[p] = new RTCPeerConnection(h.getIceServer());
+                        pc[p] = new RTCPeerConnection(h.getIceServer(), null);
 
                         stream.getTracks().forEach((track)=>{
                             pc[p].addTrack(track, stream);//should trigger negotiationneeded event
