@@ -119,18 +119,26 @@ window.addEventListener('load', ()=>{
         function init(createOffer, partnerName){console.log(partnerName);
             pc[partnerName] = new RTCPeerConnection(h.getIceServer());
             
-            h.getUserFullMedia().then((stream)=>{
-                //save my stream
-                myStream = stream;
-
-                stream.getTracks().forEach((track)=>{
-                    sender[partnerName] = pc[partnerName].addTrack(track, stream);//should trigger negotiationneeded event
+            if(myStream){
+                myStream.getTracks().forEach((track)=>{
+                    sender[partnerName] = pc[partnerName].addTrack(track, myStream);//should trigger negotiationneeded event
                 });
+            }
 
-                document.getElementById('local').srcObject = stream;
-            }).catch((e)=>{
-                console.error(`stream error: ${e}`);
-            });
+            else{
+                h.getUserFullMedia().then((stream)=>{
+                    //save my stream
+                    myStream = stream;
+    
+                    stream.getTracks().forEach((track)=>{
+                        sender[partnerName] = pc[partnerName].addTrack(track, stream);//should trigger negotiationneeded event
+                    });
+    
+                    document.getElementById('local').srcObject = stream;
+                }).catch((e)=>{
+                    console.error(`stream error: ${e}`);
+                });
+            }
 
 
 
