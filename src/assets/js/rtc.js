@@ -24,6 +24,7 @@ window.addEventListener('load', ()=>{
         }
 
         var pc = [];
+        var allPeerConnections = [];
 
         let socket = io('/stream');
 
@@ -117,6 +118,7 @@ window.addEventListener('load', ()=>{
 
         function init(createOffer, partnerName){
             pc[partnerName] = new RTCPeerConnection(h.getIceServer());
+            allPeerConnections.push(pc[partnerName]);
             
             h.getUserFullMedia().then((stream)=>{
                 //save my stream
@@ -225,9 +227,9 @@ window.addEventListener('load', ()=>{
                 myStream = stream;
 
                 //share the new stream with all partners
-                for(let p in pc){
+                for(let p in allPeerConnections){
                     stream.getTracks().forEach((track)=>{
-                        pc[p].addTrack(track, stream);//should trigger negotiationneeded event
+                        allPeerConnections[p].addTrack(track, stream);//should trigger negotiationneeded event
                     });
                 }
 
@@ -245,9 +247,9 @@ window.addEventListener('load', ()=>{
                 myStream = stream;
 
                 //share the new stream with all partners
-                for(let p in pc){
+                for(let p in allPeerConnections){
                     stream.getTracks().forEach((track)=>{
-                        pc[p].addTrack(track, stream);//should trigger negotiationneeded event
+                        allPeerConnections[p].addTrack(track, stream);//should trigger negotiationneeded event
                     });
                 }
 
@@ -289,9 +291,9 @@ window.addEventListener('load', ()=>{
                     myStream = stream;
     
                     //share the new stream with all partners
-                    for(let p in pc){
+                    for(let p in allPeerConnections){
                         stream.getTracks().forEach((track)=>{
-                            pc[p].addTrack(track, stream);//should trigger negotiationneeded event
+                            allPeerConnections[p].addTrack(track, stream);//should trigger negotiationneeded event
                         });
                     }
     
