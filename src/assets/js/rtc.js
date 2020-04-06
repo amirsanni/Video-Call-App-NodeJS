@@ -228,7 +228,6 @@ window.addEventListener('load', ()=>{
 
                 //share the new stream with all partners
                 for(let p in allPeerConnections){
-                    allPeerConnections[p] = new RTCPeerConnection(h.getIceServer());
                     stream.getTracks().forEach((track)=>{
                         allPeerConnections[p].addTrack(track, stream);//should trigger negotiationneeded event
                     });
@@ -250,7 +249,6 @@ window.addEventListener('load', ()=>{
 
                     //share the new stream with all partners
                     for(let p in allPeerConnections){
-                        allPeerConnections[p] = new RTCPeerConnection(h.getIceServer());
                         stream.getTracks().forEach((track)=>{
                             allPeerConnections[p].addTrack(track, stream);//should trigger negotiationneeded event
                         });
@@ -296,7 +294,6 @@ window.addEventListener('load', ()=>{
     
                     //share the new stream with all partners
                     for(let p in allPeerConnections){
-                        allPeerConnections[p] = new RTCPeerConnection(h.getIceServer());
                         stream.getTracks().forEach((track)=>{
                             allPeerConnections[p].addTrack(track, stream);//should trigger negotiationneeded event
                         });
