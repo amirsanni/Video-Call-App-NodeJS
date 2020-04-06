@@ -277,7 +277,7 @@ window.addEventListener('load', ()=>{
                 videoIconElem.setAttribute('title', 'Show Video');
 
                 if(myStream && myStream.getVideoTracks().length){
-                    myStream.getVideoTracks().forEach(track => track.remove());
+                    myStream.getVideoTracks().forEach(track => track.stop());
                 }
 
                 res();
