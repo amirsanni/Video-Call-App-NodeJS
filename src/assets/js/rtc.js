@@ -244,7 +244,7 @@ window.addEventListener('load', ()=>{
                     renegotiate(stream);
 
                     //When the stop sharing button shown by the browser is clicked
-                    myStream.getVideoTracks()[0].addEventListener('ended', ()=>{console.log('ended')
+                    myStream.getVideoTracks()[0].addEventListener('inactive', ()=>{console.log('ended')
                         broadcastUserFullMedia();
                     });
                 }).catch((e)=>{
@@ -297,7 +297,7 @@ window.addEventListener('load', ()=>{
             for(let p in pc){
                 let pName = pc[p];
 
-                stream.getTracks().forEach((track)=>{
+                stream.getTracks().forEach((track)=>{console.log(typeof pc[pName]);
                     pc[pName].addTrack(track, stream);//should trigger negotiationneeded event
                 });
 
