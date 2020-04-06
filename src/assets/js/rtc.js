@@ -236,7 +236,7 @@ window.addEventListener('load', ()=>{
             toggleShareIcons(false);
 
             for(let p in pc){
-                init(true, p, 'full');
+                init(true, pc[p], 'full');
             }
             // h.getUserFullMedia().then((stream)=>{
             //     videoIconElem.children[0].classList.add('fa-video');
@@ -268,7 +268,7 @@ window.addEventListener('load', ()=>{
                 toggleShareIcons(true);
 
                 for(let p in pc){
-                    init(true, p, 'screen');
+                    init(true, pc[p], 'screen');
                 }
                 // h.shareScreen().then((stream)=>{
                 //     toggleShareIcons(true);
@@ -320,7 +320,7 @@ window.addEventListener('load', ()=>{
                 toggleShareIcons(false);
 
                 for(let p in pc){
-                    init(true, p, 'audio');
+                    init(true, pc[p], 'audio');
                 }
                 // h.getUserAudio().then((stream)=>{
                 //     toggleShareIcons(false);
