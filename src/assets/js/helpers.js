@@ -52,13 +52,16 @@ export default {
     getUserMedia(mediaType){
         switch(mediaType){
             case 'full':
-                return this.getUserFullMedia();
+                this.getUserFullMedia();
+                break;
 
             case 'audio':
-                return this.getUserAudio();
+                this.getUserAudio();
+                break;
             
             case 'screen':
-                return this.shareScreen();
+                this.shareScreen();
+                break;
         }
     },
 
