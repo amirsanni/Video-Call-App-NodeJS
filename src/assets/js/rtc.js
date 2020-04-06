@@ -244,11 +244,12 @@ window.addEventListener('load', ()=>{
                     renegotiate(stream);
 
                     //When the stop sharing button shown by the browser is clicked
-                    myStream.getVideoTracks()[0].addEventListener('ended', ()=>{
+                    myStream.getVideoTracks()[0].addEventListener('ended', ()=>{console.log('ended')
                         broadcastUserFullMedia();
                     });
                 }).catch((e)=>{
                     console.error(`screen share error: ${e}`);
+                    broadcastUserFullMedia();
                 });
             });
         }
