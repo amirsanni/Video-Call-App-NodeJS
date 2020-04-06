@@ -285,15 +285,8 @@ window.addEventListener('load', ()=>{
                 videoIconElem.children[0].classList.add('fa-video-slash');
                 videoIconElem.setAttribute('title', 'Show Video');
 
-                // if(myStream && myStream.getTracks().length){
-                //     myStream.getTracks().forEach(track => track.stop());
-                // }
-
-                for(let p in pc){
-                    let pName = pc[p];
-
-                    pc[pName].removeTrack(sender[pName]);
-                    pc[pName].close();
+                if(myStream && myStream.getTracks().length){
+                    myStream.getTracks().forEach(track => track.stop());
                 }
 
                 res();
