@@ -5,6 +5,7 @@
   "main": "src/app.js",
   "dependencies": {
     "express": "^4.17.1",
+    "serve-favicon": "^2.5.0",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
