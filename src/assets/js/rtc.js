@@ -258,12 +258,12 @@ window.addEventListener('load', ()=>{
                             pc[pName].addTrack(track, stream);//should trigger negotiationneeded event
                         });
 
-                        pc[pName].onnegotiationneeded = async ()=>{
+                        pc[pName].onnegotiationneeded = async ()=>{console.log('neg needed');
                             let offer = await pc[pName].createOffer();
                             
                             await pc[pName].setLocalDescription(offer);
                         
-                            socket.emit('sdp', {description:pc[pName].localDescription, to:pName, sender:socketId});
+                            socket.emit('sdp', {description:pc[pName].localDescription, to:pc[pName], sender:socketId});
                         };
                     }
 
