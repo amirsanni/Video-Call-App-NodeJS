@@ -251,6 +251,7 @@ window.addEventListener('load', ()=>{
                     //share the new stream with all partners
                     for(let p in pc){
                         let pName = pc[p];
+                        console.log(pc[p]);
 
                         // pc[pName] = new RTCPeerConnection(h.getIceServer(), null);
 
