@@ -116,7 +116,7 @@ window.addEventListener('load', ()=>{
 
 
 
-        function init(createOffer, partnerName){
+        function init(createOffer, partnerName){console.log(partnerName);
             pc[partnerName] = new RTCPeerConnection(h.getIceServer());
             
             h.getUserFullMedia().then((stream)=>{
@@ -261,7 +261,7 @@ window.addEventListener('load', ()=>{
                         pc[pName].onnegotiationneeded = async ()=>{console.log('neg needed');
                             let offer = await pc[pName].createOffer();
                             
-                            await pc[pName].setLocalDescription(offer);
+                            await pc[pName].setLocalDescription(offer);console.log(pName);
                         
                             socket.emit('sdp', {description:pc[pName].localDescription, to:pName, sender:socketId});
                         };
