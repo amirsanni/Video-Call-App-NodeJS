@@ -214,7 +214,7 @@ window.addEventListener('load', ()=>{
 
 
         function broadcastUserFullMedia(){
-            h.getUserFullMedia().then((stream)=>{
+            h.getUserFullMedia().then(async (stream)=>{
                 videoIconElem.children[0].classList.add('fa-video');
                 videoIconElem.children[0].classList.remove('fa-video-slash');
                 videoIconElem.setAttribute('title', 'Hide Video');
@@ -238,7 +238,7 @@ window.addEventListener('load', ()=>{
 
 
         function shareScreen(){
-            h.shareScreen().then((stream)=>{
+            h.shareScreen().then(async (stream)=>{
                 toggleShareIcons(true);
 
                 //save my stream
@@ -282,7 +282,7 @@ window.addEventListener('load', ()=>{
 
         function broadcastAudioOnly(){
             stopVideo().then(()=>{
-                h.getUserAudio().then((stream)=>{
+                h.getUserAudio().then(async (stream)=>{
                     toggleShareIcons(false);
     
                     //save my stream
@@ -296,8 +296,8 @@ window.addEventListener('load', ()=>{
                     }
     
                     document.getElementById('local').srcObject = stream;
-                }).catch(()=>{
-                    console.error('Audio only error');
+                }).catch((e)=>{
+                    console.error('Audio only error: '+e);
                 });
             });
             
