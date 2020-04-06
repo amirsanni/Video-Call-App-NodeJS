@@ -117,8 +117,23 @@ window.addEventListener('load', ()=>{
 
         function init(createOffer, partnerName, mediaType){
             pc[partnerName] = new RTCPeerConnection(h.getIceServer());
+
+            let prom = '';
             
-            h.getUserMedia(mediaType).then((stream)=>{
+            switch(mediaType){
+                case 'audio':
+                    prom = h.getUserAudio();
+                break;
+                
+                case 'screen':
+                    prom = h.shareScreen();
+                break;
+
+                default:
+                    prom = h.getUserFullMedia();
+            }
+            
+            prom.then((stream)=>{
                 //save my stream
                 myStream = stream;
 
@@ -303,7 +318,7 @@ window.addEventListener('load', ()=>{
         function broadcastAudioOnly(){
             stopVideo().then(()=>{
                 toggleShareIcons(false);
-                
+
                 for(let p in pc){
                     init(true, p, 'audio');
                 }
