@@ -263,7 +263,7 @@ window.addEventListener('load', ()=>{
                 }).catch((e)=>{
                     console.error(`screen share error: ${e}`);
                 });
-            }
+            });
         }
 
 
