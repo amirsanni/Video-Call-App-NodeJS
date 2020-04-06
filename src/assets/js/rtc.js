@@ -296,20 +296,20 @@ window.addEventListener('load', ()=>{
 
             for(let p in pc){
                 let pName = pc[p];
-
-                stream.getTracks().forEach((track)=>{
-                    if(typeof pc[pName] == 'object'){
-                        pc[pName].addTrack(track, stream);//should trigger negotiationneeded event
-                    }
-                });
-
-                pc[pName].onnegotiationneeded = async ()=>{console.log('neg needed');
-                    let offer = await pc[pName].createOffer();
-                    
-                    await pc[pName].setLocalDescription(offer);console.log(pName);
                 
-                    socket.emit('sdp', {description:pc[pName].localDescription, to:pName, sender:socketId});
-                };
+                if(typeof pc[pName] == 'object'){
+                    stream.getTracks().forEach((track)=>{
+                        pc[pName].addTrack(track, stream);//should trigger negotiationneeded event
+                    });
+
+                    pc[pName].onnegotiationneeded = async ()=>{console.log('neg needed');
+                        let offer = await pc[pName].createOffer();
+                        
+                        await pc[pName].setLocalDescription(offer);console.log(pName);
+                    
+                        socket.emit('sdp', {description:pc[pName].localDescription, to:pName, sender:socketId});
+                    };
+                }
             }
         }
 
