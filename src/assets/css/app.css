@@ -68,8 +68,7 @@
     bottom: 0;
     left: 0;
     position: fixed;
-    height: 100px;
-    width: 200px;
+    width: 300px;
     z-index: 1000;
 }
 
@@ -130,8 +129,7 @@
     }
 
     .local-video{
-        height: 80px;
-        width: 100px;
+        width: 80vw;
     }
 
     #chat-messages{

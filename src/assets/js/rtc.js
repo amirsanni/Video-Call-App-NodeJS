@@ -29,6 +29,7 @@ window.addEventListener('load', ()=>{
 
         var socketId = '';
         var myStream = '';
+        var videoIconElem = document.querySelector('#toggle-video');
 
         socket.on('connect', ()=>{
             //set socketId
@@ -63,7 +64,7 @@ window.addEventListener('load', ()=>{
                 if(data.description.type === 'offer'){
                     data.description ? await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description)) : '';
 
-                    h.getUserMedia().then(async (stream)=>{
+                    h.getUserFullMedia().then(async (stream)=>{
                         if(!document.getElementById('local').srcObject){
                             document.getElementById('local').srcObject = stream;
                         }
@@ -117,7 +118,7 @@ window.addEventListener('load', ()=>{
         function init(createOffer, partnerName){
             pc[partnerName] = new RTCPeerConnection(h.getIceServer());
             
-            h.getUserMedia().then((stream)=>{
+            h.getUserFullMedia().then((stream)=>{
                 //save my stream
                 myStream = stream;
 
@@ -211,6 +212,113 @@ window.addEventListener('load', ()=>{
         }
 
 
+
+        function broadcastUserFullMedia(){
+            h.getUserFullMedia().then((stream)=>{
+                videoIconElem.children[0].classList.add('fa-video');
+                videoIconElem.children[0].classList.remove('fa-video-slash');
+                videoIconElem.setAttribute('title', 'Hide Video');
+
+                toggleShareIcons(false);
+
+                //save my stream
+                myStream = stream;
+
+                //share the new stream with all partners
+                for(let p in pc){
+                    stream.getTracks().forEach((track)=>{
+                        pc[p].addTrack(track, stream);//should trigger negotiationneeded event
+                    });
+                }
+
+                document.getElementById('local').srcObject = stream;
+            }).catch();
+        }
+
+
+
+        function shareScreen(){
+            h.shareScreen().then((stream)=>{
+                toggleShareIcons(true);
+
+                //save my stream
+                myStream = stream;
+
+                //share the new stream with all partners
+                for(let p in pc){
+                    stream.getTracks().forEach((track)=>{
+                        pc[p].addTrack(track, stream);//should trigger negotiationneeded event
+                    });
+                }
+
+                document.getElementById('local').srcObject = stream;
+
+                //When the stop sharing button shown by the browser is clicked
+                myStream.getVideoTracks()[0].addEventListener('ended', ()=>{
+                    broadcastUserFullMedia();
+                });
+            }).catch((e)=>{
+                console.error(`screen share error: ${e}`);
+            });
+        }
+
+
+
+        function stopVideo(){
+            return new Promise((res, rej)=>{
+                videoIconElem.children[0].classList.remove('fa-video');
+                videoIconElem.children[0].classList.add('fa-video-slash');
+                videoIconElem.setAttribute('title', 'Show Video');
+
+                if(myStream && myStream.getVideoTracks().length){
+                    myStream.getVideoTracks().forEach(track => track.stop());
+                }
+
+                res();
+            });
+        }
+
+
+
+        function broadcastAudioOnly(){
+            stopVideo().then(()=>{
+                h.getUserAudio().then((stream)=>{
+                    toggleShareIcons(false);
+    
+                    //save my stream
+                    myStream = stream;
+    
+                    //share the new stream with all partners
+                    for(let p in pc){
+                        stream.getTracks().forEach((track)=>{
+                            pc[p].addTrack(track, stream);//should trigger negotiationneeded event
+                        });
+                    }
+    
+                    document.getElementById('local').srcObject = stream;
+                }).catch(()=>{
+                    console.error('Audio only error');
+                });
+            });
+            
+        }
+
+
+
+        function toggleShareIcons(share){
+            if(share){
+                document.querySelector('#share-screen').setAttribute('hidden', true);
+                document.querySelector('#stop-screen-share').removeAttribute('hidden');
+            }
+
+            else{
+                document.querySelector('#share-screen').removeAttribute('hidden');
+                document.querySelector('#stop-screen-share').setAttribute('hidden', true);
+            }
+        }
+
+
+        //Chat textarea
         document.getElementById('chat-input').addEventListener('keypress', (e)=>{
             if(e.which === 13 && (e.target.value.trim())){
                 e.preventDefault();
@@ -224,25 +332,49 @@ window.addEventListener('load', ()=>{
         });
 
 
+        //When the video icon is clicked
         document.getElementById('toggle-video').addEventListener('click', (e)=>{
             e.preventDefault();
 
-            myStream.getVideoTracks()[0].enabled = !(myStream.getVideoTracks()[0].enabled);
+            // myStream.getVideoTracks()[0].enabled = !(myStream.getVideoTracks()[0].enabled);
+            if(myStream.getVideoTracks().length){
+                broadcastAudioOnly();
+            }
 
-            //toggle video icon
-            e.srcElement.classList.toggle('fa-video');
-            e.srcElement.classList.toggle('fa-video-slash');
+            else{
+                broadcastUserFullMedia();
+            }
         });
 
 
+        //When the mute icon is clicked
         document.getElementById('toggle-mute').addEventListener('click', (e)=>{
             e.preventDefault();
 
             myStream.getAudioTracks()[0].enabled = !(myStream.getAudioTracks()[0].enabled);
 
             //toggle audio icon
-            e.srcElement.classList.toggle('fa-microphone-alt');
-            e.srcElement.classList.toggle('fa-microphone-alt-slash');
+            e.target.classList.toggle('fa-microphone-alt');
+            e.target.classList.toggle('fa-microphone-alt-slash');
+            
+            let elem = document.getElementById('toggle-mute');
+            elem.setAttribute('title', elem.getAttribute('title') == 'Mute' ? 'Unmute' : 'Mute');
+        });
+
+
+        //When user clicks the 'Share screen' button
+        document.getElementById('share-screen').addEventListener('click', (e)=>{
+            e.preventDefault();
+
+            shareScreen();
+        });
+
+
+        //When user clicks the stop sharing button
+        document.getElementById('stop-screen-share').addEventListener('click', (e)=>{
+            e.preventDefault();
+
+            broadcastUserFullMedia();
         });
     }
 });

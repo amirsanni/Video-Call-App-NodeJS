@@ -21,12 +21,20 @@
             <div class="text-white">Video Call</div>
 
             <div class="pull-right room-comm" hidden>
-                <button class="btn btn-sm rounded-0 btn-no-effect" id='toggle-video'>
+                <button class="btn btn-sm rounded-0 btn-no-effect" id='toggle-video' title="Hide Video">
                     <i class="fa fa-video text-white"></i>
                 </button>
 
-                <button class="btn btn-sm rounded-0 btn-no-effect" id='toggle-mute'>
+                <button class="btn btn-sm rounded-0 btn-no-effect" id='toggle-mute' title="Mute">
                     <i class="fa fa-microphone-alt text-white"></i>
+                </button>
+
+                <button class="btn btn-sm rounded-0 btn-no-effect" id='share-screen' title="Share Screen">
+                    <i class="fa fa-desktop text-white"></i>
+                </button>
+
+                <button class="btn btn-sm rounded-0 btn-no-effect" id='stop-screen-share' title="Stop Sharing Screen" hidden>
+                    <i class="fa fa-desktop text-primary"></i>
                 </button>
 
                 <button class="btn btn-sm text-white pull-right d-md-none btn-no-effect" id='toggle-chat-pane'>
