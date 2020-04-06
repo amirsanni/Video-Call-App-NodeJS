@@ -24,7 +24,6 @@ window.addEventListener('load', ()=>{
         }
 
         var pc = [];
-        var sender = [];
 
         let socket = io('/stream');
 
@@ -74,7 +73,7 @@ window.addEventListener('load', ()=>{
                         myStream = stream;
 
                         stream.getTracks().forEach((track)=>{
-                            sender[data.sender] = pc[data.sender].addTrack(track, stream);
+                            pc[data.sender].addTrack(track, stream);
                         });
 
                         let answer = await pc[data.sender].createAnswer();
@@ -119,9 +118,9 @@ window.addEventListener('load', ()=>{
         function init(createOffer, partnerName){console.log(partnerName);
             pc[partnerName] = new RTCPeerConnection(h.getIceServer());
             
-            if(myStream){console.log('hi')
+            if(myStream){
                 myStream.getTracks().forEach((track)=>{
-                    sender[partnerName] = pc[partnerName].addTrack(track, myStream);//should trigger negotiationneeded event
+                    pc[partnerName].addTrack(track, myStream);//should trigger negotiationneeded event
                 });
             }
 
@@ -131,7 +130,7 @@ window.addEventListener('load', ()=>{
                     myStream = stream;
     
                     stream.getTracks().forEach((track)=>{
-                        sender[partnerName] = pc[partnerName].addTrack(track, stream);//should trigger negotiationneeded event
+                        pc[partnerName].addTrack(track, stream);//should trigger negotiationneeded event
                     });
     
                     document.getElementById('local').srcObject = stream;
@@ -256,7 +255,6 @@ window.addEventListener('load', ()=>{
                         broadcastUserFullMedia();
                     });
                 }).catch((e)=>{
-                    console.error(`screen share error: ${e}`);
                     broadcastUserFullMedia();
                 });
             });
