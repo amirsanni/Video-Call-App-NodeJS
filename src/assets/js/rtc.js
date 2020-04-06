@@ -226,15 +226,7 @@ window.addEventListener('load', ()=>{
                 myStream = stream;
 
                 //share the new stream with all partners
-                for(let p in pc){
-                    pc[p] = new RTCPeerConnection(h.getIceServer(), null);
-
-                    stream.getTracks().forEach((track)=>{
-                        pc[p].addTrack(track, stream);//should trigger negotiationneeded event
-                    });
-                }
-
-                document.getElementById('local').srcObject = stream;
+                renegotiate(stream);
             }).catch();
         }
 
@@ -249,26 +241,7 @@ window.addEventListener('load', ()=>{
                     myStream = stream;
 
                     //share the new stream with all partners
-                    for(let p in pc){
-                        let pName = pc[p];
-                        console.log(pc[p]);
-
-                        // pc[pName] = new RTCPeerConnection(h.getIceServer(), null);
-
-                        stream.getTracks().forEach((track)=>{
-                            pc[pName].addTrack(track, stream);//should trigger negotiationneeded event
-                        });
-
-                        pc[pName].onnegotiationneeded = async ()=>{console.log('neg needed');
-                            let offer = await pc[pName].createOffer();
-                            
-                            await pc[pName].setLocalDescription(offer);console.log(pName);
-                        
-                            socket.emit('sdp', {description:pc[pName].localDescription, to:pName, sender:socketId});
-                        };
-                    }
-
-                    document.getElementById('local').srcObject = stream;
+                    renegotiate(stream);
 
                     //When the stop sharing button shown by the browser is clicked
                     myStream.getVideoTracks()[0].addEventListener('ended', ()=>{
@@ -307,20 +280,34 @@ window.addEventListener('load', ()=>{
                     myStream = stream;
     
                     //share the new stream with all partners
-                    for(let p in pc){
-                        pc[p] = new RTCPeerConnection(h.getIceServer(), null);
-
-                        stream.getTracks().forEach((track)=>{
-                            pc[p].addTrack(track, stream);//should trigger negotiationneeded event
-                        });
-                    }
-    
-                    document.getElementById('local').srcObject = stream;
+                    renegotiate(stream);
                 }).catch((e)=>{
                     console.error('Audio only error: '+e);
                 });
             });
             
+        }
+
+
+
+        function renegotiate(stream){
+            document.getElementById('local').srcObject = stream;
+
+            for(let p in pc){
+                let pName = pc[p];
+
+                stream.getTracks().forEach((track)=>{
+                    pc[pName].addTrack(track, stream);//should trigger negotiationneeded event
+                });
+
+                pc[pName].onnegotiationneeded = async ()=>{console.log('neg needed');
+                    let offer = await pc[pName].createOffer();
+                    
+                    await pc[pName].setLocalDescription(offer);console.log(pName);
+                
+                    socket.emit('sdp', {description:pc[pName].localDescription, to:pName, sender:socketId});
+                };
+            }
         }
 
 
