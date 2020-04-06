@@ -115,25 +115,10 @@ window.addEventListener('load', ()=>{
 
 
 
-        function init(createOffer, partnerName, mediaType){
+        function init(createOffer, partnerName){
             pc[partnerName] = new RTCPeerConnection(h.getIceServer());
-
-            let prom = '';
             
-            switch(mediaType){
-                case 'audio':
-                    prom = h.getUserAudio();
-                break;
-                
-                case 'screen':
-                    prom = h.shareScreen();
-                break;
-
-                default:
-                    prom = h.getUserFullMedia();
-            }
-            
-            prom.then((stream)=>{
+            h.getUserFullMedia().then((stream)=>{
                 //save my stream
                 myStream = stream;
 
@@ -229,71 +214,66 @@ window.addEventListener('load', ()=>{
 
 
         function broadcastUserFullMedia(){
-            videoIconElem.children[0].classList.add('fa-video');
-            videoIconElem.children[0].classList.remove('fa-video-slash');
-            videoIconElem.setAttribute('title', 'Hide Video');
+            h.getUserFullMedia().then((stream)=>{
+                videoIconElem.children[0].classList.add('fa-video');
+                videoIconElem.children[0].classList.remove('fa-video-slash');
+                videoIconElem.setAttribute('title', 'Hide Video');
 
-            toggleShareIcons(false);
+                toggleShareIcons(false);
 
-            for(let p in pc){
-                init(true, pc[p], 'full');
-            }
-            // h.getUserFullMedia().then((stream)=>{
-            //     videoIconElem.children[0].classList.add('fa-video');
-            //     videoIconElem.children[0].classList.remove('fa-video-slash');
-            //     videoIconElem.setAttribute('title', 'Hide Video');
+                //save my stream
+                myStream = stream;
 
-            //     toggleShareIcons(false);
+                //share the new stream with all partners
+                for(let p in pc){
+                    pc[p] = new RTCPeerConnection(h.getIceServer(), null);
 
-            //     //save my stream
-            //     myStream = stream;
+                    stream.getTracks().forEach((track)=>{
+                        pc[p].addTrack(track, stream);//should trigger negotiationneeded event
+                    });
+                }
 
-            //     //share the new stream with all partners
-            //     for(let p in pc){
-            //         pc[p] = new RTCPeerConnection(h.getIceServer(), null);
-
-            //         stream.getTracks().forEach((track)=>{
-            //             pc[p].addTrack(track, stream);//should trigger negotiationneeded event
-            //         });
-            //     }
-
-            //     document.getElementById('local').srcObject = stream;
-            // }).catch();
+                document.getElementById('local').srcObject = stream;
+            }).catch();
         }
 
 
 
         function shareScreen(){
             stopVideo().then(()=>{
-                toggleShareIcons(true);
+                h.shareScreen().then((stream)=>{
+                    toggleShareIcons(true);
 
-                for(let p in pc){
-                    init(true, pc[p], 'screen');
-                }
-                // h.shareScreen().then((stream)=>{
-                //     toggleShareIcons(true);
+                    //save my stream
+                    myStream = stream;
 
-                //     //save my stream
-                //     myStream = stream;
+                    //share the new stream with all partners
+                    for(let p in pc){
+                        let pName = pc[p];
+                        pc[pName] = new RTCPeerConnection(h.getIceServer(), null);
 
-                //     //share the new stream with all partners
-                //     for(let p in pc){
-                //         pc[p] = new RTCPeerConnection(h.getIceServer(), null);
+                        stream.getTracks().forEach((track)=>{
+                            pc[pName].addTrack(track, stream);//should trigger negotiationneeded event
+                        });
 
-                //         stream.getTracks().forEach((track)=>{
-                //             pc[p].addTrack(track, stream);//should trigger negotiationneeded event
-                //         });
-                //     }
+                        pc[pName].onnegotiationneeded = async ()=>{
+                            let offer = await pc[pName].createOffer();
+                            
+                            await pc[pName].setLocalDescription(offer);
+                        
+                            socket.emit('sdp', {description:pc[pName].localDescription, to:pName, sender:socketId});
+                        };
+                    }
 
-                //     document.getElementById('local').srcObject = stream;
+                    document.getElementById('local').srcObject = stream;
 
-                //     //When the stop sharing button shown by the browser is clicked
-                //     myStream.getVideoTracks()[0].addEventListener('ended', ()=>{
-                //         broadcastUserFullMedia();
-                //     });
-                // }).catch((e)=>{
-                //     console.error(`screen share error: ${e}`);
-                // });
+                    //When the stop sharing button shown by the browser is clicked
+                    myStream.getVideoTracks()[0].addEventListener('ended', ()=>{
+                        broadcastUserFullMedia();
+                    });
+                }).catch((e)=>{
+                    console.error(`screen share error: ${e}`);
+                });
             });
         }
 
@@ -305,8 +285,8 @@ window.addEventListener('load', ()=>{
                 videoIconElem.children[0].classList.add('fa-video-slash');
                 videoIconElem.setAttribute('title', 'Show Video');
 
-                if(myStream && myStream.getVideoTracks().length){
-                    myStream.getVideoTracks().forEach(track => track.stop());
+                if(myStream && myStream.getTracks().length){
+                    myStream.getTracks().forEach(track => track.stop());
                 }
 
                 res();
@@ -317,30 +297,25 @@ window.addEventListener('load', ()=>{
 
         function broadcastAudioOnly(){
             stopVideo().then(()=>{
-                toggleShareIcons(false);
+                h.getUserAudio().then((stream)=>{
+                    toggleShareIcons(false);
+    
+                    //save my stream
+                    myStream = stream;
+    
+                    //share the new stream with all partners
+                    for(let p in pc){
+                        pc[p] = new RTCPeerConnection(h.getIceServer(), null);
 
-                for(let p in pc){
-                    init(true, pc[p], 'audio');
-                }
-                // h.getUserAudio().then((stream)=>{
-                //     toggleShareIcons(false);
+                        stream.getTracks().forEach((track)=>{
+                            pc[p].addTrack(track, stream);//should trigger negotiationneeded event
+                        });
+                    }
     
-                //     //save my stream
-                //     myStream = stream;
-    
-                //     //share the new stream with all partners
-                //     for(let p in pc){
-                //         pc[p] = new RTCPeerConnection(h.getIceServer(), null);
-
-                //         stream.getTracks().forEach((track)=>{
-                //             pc[p].addTrack(track, stream);//should trigger negotiationneeded event
-                //         });
-                //     }
-    
-                //     document.getElementById('local').srcObject = stream;
-                // }).catch((e)=>{
-                //     console.error('Audio only error: '+e);
-                // });
+                    document.getElementById('local').srcObject = stream;
+                }).catch((e)=>{
+                    console.error('Audio only error: '+e);
+                });
             });
             
         }
