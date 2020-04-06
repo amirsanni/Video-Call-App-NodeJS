@@ -24,6 +24,7 @@ window.addEventListener('load', ()=>{
         }
 
         var pc = [];
+        var sender = [];
 
         let socket = io('/stream');
 
@@ -73,7 +74,7 @@ window.addEventListener('load', ()=>{
                         myStream = stream;
 
                         stream.getTracks().forEach((track)=>{
-                            pc[data.sender].addTrack(track, stream);
+                            sender[data.sender] = pc[data.sender].addTrack(track, stream);
                         });
 
                         let answer = await pc[data.sender].createAnswer();
@@ -123,7 +124,7 @@ window.addEventListener('load', ()=>{
                 myStream = stream;
 
                 stream.getTracks().forEach((track)=>{
-                    pc[partnerName].addTrack(track, stream);//should trigger negotiationneeded event
+                    sender[partnerName] = pc[partnerName].addTrack(track, stream);//should trigger negotiationneeded event
                 });
 
                 document.getElementById('local').srcObject = stream;
@@ -250,7 +251,6 @@ window.addEventListener('load', ()=>{
                     //share the new stream with all partners
                     for(let p in pc){
                         let pName = pc[p];
-                        pc[pName] = new RTCPeerConnection(h.getIceServer(), null);
 
                         stream.getTracks().forEach((track)=>{
                             pc[pName].addTrack(track, stream);//should trigger negotiationneeded event
@@ -285,8 +285,15 @@ window.addEventListener('load', ()=>{
                 videoIconElem.children[0].classList.add('fa-video-slash');
                 videoIconElem.setAttribute('title', 'Show Video');
 
-                if(myStream && myStream.getTracks().length){
-                    myStream.getTracks().forEach(track => track.stop());
+                // if(myStream && myStream.getTracks().length){
+                //     myStream.getTracks().forEach(track => track.stop());
+                // }
+
+                for(let p in pc){
+                    let pName = pc[p];
+
+                    pc[pName].removeTrack(sender[pName]);
+                    pc[pName].close();
                 }
 
                 res();
