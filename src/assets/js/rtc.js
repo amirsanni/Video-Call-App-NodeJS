@@ -24,7 +24,6 @@ window.addEventListener('load', ()=>{
         }
 
         var pc = [];
-        var allPeerConnections = [];
 
         let socket = io('/stream');
 
@@ -118,7 +117,6 @@ window.addEventListener('load', ()=>{
 
         function init(createOffer, partnerName){
             pc[partnerName] = new RTCPeerConnection(h.getIceServer());
-            allPeerConnections.push(pc[partnerName]);
             
             h.getUserFullMedia().then((stream)=>{
                 //save my stream
@@ -216,7 +214,7 @@ window.addEventListener('load', ()=>{
 
 
         function broadcastUserFullMedia(){
-            h.getUserFullMedia().then(async (stream)=>{
+            h.getUserFullMedia().then((stream)=>{
                 videoIconElem.children[0].classList.add('fa-video');
                 videoIconElem.children[0].classList.remove('fa-video-slash');
                 videoIconElem.setAttribute('title', 'Hide Video');
@@ -227,9 +225,11 @@ window.addEventListener('load', ()=>{
                 myStream = stream;
 
                 //share the new stream with all partners
-                for(let p in allPeerConnections){
+                for(let p in pc){
+                    pc[p] = new RTCPeerConnection(h.getIceServer());
+
                     stream.getTracks().forEach((track)=>{
-                        allPeerConnections[p].addTrack(track, stream);//should trigger negotiationneeded event
+                        pc[p].addTrack(track, stream);//should trigger negotiationneeded event
                     });
                 }
 
@@ -241,16 +241,18 @@ window.addEventListener('load', ()=>{
 
         function shareScreen(){
             stopVideo().then(()=>{
-                h.shareScreen().then(async (stream)=>{
+                h.shareScreen().then((stream)=>{
                     toggleShareIcons(true);
 
                     //save my stream
                     myStream = stream;
 
                     //share the new stream with all partners
-                    for(let p in allPeerConnections){
+                    for(let p in pc){
+                        pc[p] = new RTCPeerConnection(h.getIceServer());
+
                         stream.getTracks().forEach((track)=>{
-                            allPeerConnections[p].addTrack(track, stream);//should trigger negotiationneeded event
+                            pc[p].addTrack(track, stream);//should trigger negotiationneeded event
                         });
                     }
 
@@ -286,16 +288,18 @@ window.addEventListener('load', ()=>{
 
         function broadcastAudioOnly(){
             stopVideo().then(()=>{
-                h.getUserAudio().then(async (stream)=>{
+                h.getUserAudio().then((stream)=>{
                     toggleShareIcons(false);
     
                     //save my stream
                     myStream = stream;
     
                     //share the new stream with all partners
-                    for(let p in allPeerConnections){
+                    for(let p in pc){
+                        pc[p] = new RTCPeerConnection(h.getIceServer());
+
                         stream.getTracks().forEach((track)=>{
-                            allPeerConnections[p].addTrack(track, stream);//should trigger negotiationneeded event
+                            pc[p].addTrack(track, stream);//should trigger negotiationneeded event
                         });
                     }
     
