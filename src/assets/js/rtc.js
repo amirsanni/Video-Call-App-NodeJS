@@ -263,7 +263,7 @@ window.addEventListener('load', ()=>{
                             
                             await pc[pName].setLocalDescription(offer);
                         
-                            socket.emit('sdp', {description:pc[pName].localDescription, to:pc[pName], sender:socketId});
+                            socket.emit('sdp', {description:pc[pName].localDescription, to:pName, sender:socketId});
                         };
                     }
 
