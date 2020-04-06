@@ -49,6 +49,20 @@ export default {
     },
 
 
+    getUserMedia(mediaType){
+        switch(mediaType){
+            case 'full':
+                return this.getUserFullMedia();
+
+            case 'audio':
+                return this.getUserAudio();
+            
+            case 'screen':
+                return this.shareScreen();
+        }
+    },
+
+
     getUserFullMedia(){
         if(this.userMediaAvailable()){
             return navigator.mediaDevices.getUserMedia({
@@ -80,7 +94,6 @@ export default {
             throw new Error('User media not available');
         }
     },
-
 
 
     shareScreen(){
