@@ -240,28 +240,30 @@ window.addEventListener('load', ()=>{
 
 
         function shareScreen(){
-            h.shareScreen().then(async (stream)=>{
-                toggleShareIcons(true);
+            stopVideo().then(()=>{
+                h.shareScreen().then(async (stream)=>{
+                    toggleShareIcons(true);
 
-                //save my stream
-                myStream = stream;
+                    //save my stream
+                    myStream = stream;
 
-                //share the new stream with all partners
-                for(let p in allPeerConnections){
-                    stream.getTracks().forEach((track)=>{
-                        allPeerConnections[p].addTrack(track, stream);//should trigger negotiationneeded event
+                    //share the new stream with all partners
+                    for(let p in allPeerConnections){
+                        stream.getTracks().forEach((track)=>{
+                            allPeerConnections[p].addTrack(track, stream);//should trigger negotiationneeded event
+                        });
+                    }
+
+                    document.getElementById('local').srcObject = stream;
+
+                    //When the stop sharing button shown by the browser is clicked
+                    myStream.getVideoTracks()[0].addEventListener('ended', ()=>{
+                        broadcastUserFullMedia();
                     });
-                }
-
-                document.getElementById('local').srcObject = stream;
-
-                //When the stop sharing button shown by the browser is clicked
-                myStream.getVideoTracks()[0].addEventListener('ended', ()=>{
-                    broadcastUserFullMedia();
+                }).catch((e)=>{
+                    console.error(`screen share error: ${e}`);
                 });
-            }).catch((e)=>{
-                console.error(`screen share error: ${e}`);
-            });
+            }
         }
 
 
