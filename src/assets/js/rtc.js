@@ -252,19 +252,19 @@ window.addEventListener('load', ()=>{
                     for(let p in pc){
                         let pName = pc[p];
 
-                        pc[pName] = new RTCPeerConnection(h.getIceServer(), null);
+                        // pc[pName] = new RTCPeerConnection(h.getIceServer(), null);
 
                         stream.getTracks().forEach((track)=>{
-                            pc[pName].addTrack(track, stream);//should trigger negotiationneeded event
+                            pc[pName].replaceTrack(track);//should trigger negotiationneeded event
                         });
 
-                        pc[pName].onnegotiationneeded = async ()=>{console.log('neg needed');
-                            let offer = await pc[pName].createOffer();
+                        // pc[pName].onnegotiationneeded = async ()=>{console.log('neg needed');
+                        //     let offer = await pc[pName].createOffer();
                             
-                            await pc[pName].setLocalDescription(offer);console.log(pName);
+                        //     await pc[pName].setLocalDescription(offer);console.log(pName);
                         
-                            socket.emit('sdp', {description:pc[pName].localDescription, to:pName, sender:socketId});
-                        };
+                        //     socket.emit('sdp', {description:pc[pName].localDescription, to:pName, sender:socketId});
+                        // };
                     }
 
                     document.getElementById('local').srcObject = stream;
