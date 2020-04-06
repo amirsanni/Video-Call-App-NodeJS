@@ -252,6 +252,8 @@ window.addEventListener('load', ()=>{
                     for(let p in pc){
                         let pName = pc[p];
 
+                        pc[pName] = new RTCPeerConnection(h.getIceServer(), null);
+
                         stream.getTracks().forEach((track)=>{
                             pc[pName].addTrack(track, stream);//should trigger negotiationneeded event
                         });
