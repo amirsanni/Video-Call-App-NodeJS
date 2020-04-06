@@ -115,7 +115,7 @@ window.addEventListener('load', ()=>{
 
 
 
-        function init(createOffer, partnerName){console.log(partnerName);
+        function init(createOffer, partnerName){
             pc[partnerName] = new RTCPeerConnection(h.getIceServer());
             
             if(myStream){
@@ -268,7 +268,7 @@ window.addEventListener('load', ()=>{
                 videoIconElem.children[0].classList.add('fa-video-slash');
                 videoIconElem.setAttribute('title', 'Show Video');
 
-                if(myStream && myStream.getTracks().length){
+                if(myStream && myStream.getVideoTracks().length){
                     myStream.getTracks().forEach(track => track.stop());
                 }
 
