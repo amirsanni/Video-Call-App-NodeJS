@@ -256,7 +256,7 @@ window.addEventListener('load', ()=>{
                 screen = stream;
 
                 //share the new stream with all partners
-                broadcastNewTracks(stream);
+                broadcastNewTracks(stream, 'video');
 
                 //When the stop sharing button shown by the browser is clicked
                 screen.getVideoTracks()[0].addEventListener('ended', ()=>{
@@ -279,20 +279,22 @@ window.addEventListener('load', ()=>{
                 res();
             }).then(()=>{
                 h.toggleShareIcons(false);
-                broadcastNewTracks(myStream);
+                broadcastNewTracks(myStream, 'video');
             }).catch();
         }
 
 
 
-        function broadcastNewTracks(stream){
+        function broadcastNewTracks(stream, type){
             document.getElementById('local').srcObject = stream;
+
+            let track = type == 'audio' ? stream.getAudioTracks()[0] : stream.getVideoTracks()[0];
 
             for(let p in pc){
                 let pName = pc[p];
                 
                 if(typeof pc[pName] == 'object'){
-                    h.replaceVideoTrack(stream.getVideoTracks()[0], pc[pName]);
+                    h.replaceTrack(track, pc[pName]);
                 }
             }
         }
@@ -324,8 +326,6 @@ window.addEventListener('load', ()=>{
                 elem.setAttribute('title', 'Show Video');
 
                 myStream.getVideoTracks()[0].enabled = false;
-
-                broadcastNewTracks(myStream);
             }
 
             else{
@@ -334,9 +334,9 @@ window.addEventListener('load', ()=>{
                 elem.setAttribute('title', 'Hide Video');
 
                 myStream.getVideoTracks()[0].enabled = true;
-
-                broadcastNewTracks(myStream);
             }
+
+            broadcastNewTracks(myStream, 'video');
         });
 
 
@@ -344,14 +344,34 @@ window.addEventListener('load', ()=>{
         document.getElementById('toggle-mute').addEventListener('click', (e)=>{
             e.preventDefault();
 
-            myStream.getAudioTracks()[0].enabled = !(myStream.getAudioTracks()[0].enabled);
+            // myStream.getAudioTracks()[0].enabled = !(myStream.getAudioTracks()[0].enabled);
 
-            //toggle audio icon
-            e.target.classList.toggle('fa-microphone-alt');
-            e.target.classList.toggle('fa-microphone-alt-slash');
+            // //toggle audio icon
+            // e.target.classList.toggle('fa-microphone-alt');
+            // e.target.classList.toggle('fa-microphone-alt-slash');
             
+            // let elem = document.getElementById('toggle-mute');
+            // elem.setAttribute('title', elem.getAttribute('title') == 'Mute' ? 'Unmute' : 'Mute');
+
             let elem = document.getElementById('toggle-mute');
-            elem.setAttribute('title', elem.getAttribute('title') == 'Mute' ? 'Unmute' : 'Mute');
+            
+            if(myStream.getAudioTracks()[0].enabled){
+                e.target.classList.remove('fa-microphone-alt');
+                e.target.classList.add('fa-microphone-alt-slash');
+                elem.setAttribute('title', 'Unmute');
+
+                myStream.getAudioTracks()[0].enabled = false;
+            }
+
+            else{
+                e.target.classList.remove('fa-microphone-alt-slash');
+                e.target.classList.add('fa-microphone-alt');
+                elem.setAttribute('title', 'Mute');
+
+                myStream.getAudioTracks()[0].enabled = true;
+            }
+
+            broadcastNewTracks(myStream, 'audio');
         });
 
 
