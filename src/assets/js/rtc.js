@@ -338,7 +338,7 @@ window.addEventListener('load', ()=>{
                 // myStream.getVideoTracks()[0].enabled = false;
                 let vidTrackLen = myStream.getVideoTracks().length;
 
-                for(let i in vidTrackLen){
+                for(let i in vidTrackLen){console.log(i);
                     myStream.getVideoTracks()[i].enabled = false;
                 }
             }
