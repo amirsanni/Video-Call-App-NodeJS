@@ -119,8 +119,7 @@ window.addEventListener('load', ()=>{
         function init(createOffer, partnerName){
             pc[partnerName] = new RTCPeerConnection(h.getIceServer());
             
-            if(screen){
-                // replaceVideoTrack(screen.getVideoTracks()[0], pc[partnerName]);
+            if(screen && screen.getTracks().length){
                 screen.getTracks().forEach((track)=>{
                     pc[partnerName].addTrack(track, screen);//should trigger negotiationneeded event
                 });
