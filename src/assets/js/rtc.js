@@ -256,6 +256,7 @@ window.addEventListener('load', ()=>{
                 });
             }).catch((e)=>{
                 broadcastUserFullMedia();
+                console.error(e);
             });
         }
 
@@ -334,7 +335,8 @@ window.addEventListener('load', ()=>{
                 e.target.classList.add('fa-video-slash');
                 elem.setAttribute('title', 'Show Video');
 
-                myStream.getVideoTracks()[0].enabled = false;
+                // myStream.getVideoTracks()[0].enabled = false;
+                myStream.getVideoTracks().forEach(track => track.enabled = false);
             }
 
             else{
@@ -342,7 +344,8 @@ window.addEventListener('load', ()=>{
                 e.target.classList.add('fa-video');
                 elem.setAttribute('title', 'Hide Video');
 
-                myStream.getVideoTracks()[0].enabled = true;
+                // myStream.getVideoTracks()[0].enabled = true;
+                myStream.getVideoTracks().forEach(track => track.enabled = true);
             }
         });
 
