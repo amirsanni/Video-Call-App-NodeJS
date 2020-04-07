@@ -358,7 +358,7 @@ window.addEventListener('load', ()=>{
 
                 myStream.getVideoTracks()[0].enabled = false;
 
-                broadcastNewTracks(myStream.getVideoTracks()[0]);
+                broadcastNewTracks(myStream);
             }
 
             else{
@@ -368,7 +368,7 @@ window.addEventListener('load', ()=>{
 
                 myStream.getVideoTracks()[0].enabled = true;
 
-                broadcastNewTracks(myStream.getVideoTracks()[0]);
+                broadcastNewTracks(myStream);
             }
         });
 
