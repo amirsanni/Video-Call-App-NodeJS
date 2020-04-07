@@ -189,9 +189,7 @@ export default {
 
 
     maximiseStream(e){
-        // document.querySelector('#videos').style.display = 'none';
-        document.querySelector('#single-video-div').style.display = 'block';
-        // document.querySelector('#single-peer-video').srcObject = e.srcObject;
+        document.querySelector('#close-single-peer-btn').style.display = 'block';
 
         //mute the original video
         // e.muted = true;

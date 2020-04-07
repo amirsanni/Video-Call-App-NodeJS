@@ -113,7 +113,7 @@ window.addEventListener('load', ()=>{
 
     //When 'close' is clicked to exit single peer video
     document.getElementById('close-single-peer-btn').addEventListener('click', (e)=>{
-        document.querySelector('#single-video-div').style.display = 'none';
+        document.querySelector('#close-single-peer-btn').style.display = 'none';
 
         //minimise video
         let singleStream = document.getElementsByClassName('single-peer-video');
