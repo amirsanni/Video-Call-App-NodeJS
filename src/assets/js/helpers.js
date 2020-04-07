@@ -207,13 +207,13 @@ export default {
 
     singleStreamToggleMute(e){
         if(e.target.classList.contains('fa-microphone')){
-            e.target.muted = true;
+            e.target.parentElement.previousElementSibling.muted = true;
             e.target.classList.add('fa-microphone-slash');
             e.target.classList.remove('fa-microphone');
         }
 
         else{
-            e.target.muted = false;
+            e.target.parentElement.previousElementSibling.muted = false;
             e.target.classList.add('fa-microphone');
             e.target.classList.remove('fa-microphone-slash');
         }
