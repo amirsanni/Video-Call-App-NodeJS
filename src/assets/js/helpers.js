@@ -189,11 +189,18 @@ export default {
 
 
     maximiseStream(e){
-        document.querySelector('#videos').style.display = 'none';
+        // document.querySelector('#videos').style.display = 'none';
         document.querySelector('#single-video-div').style.display = 'block';
-        document.querySelector('#single-peer-video').srcObject = e.srcObject;
+        // document.querySelector('#single-peer-video').srcObject = e.srcObject;
 
         //mute the original video
         // e.muted = true;
+        e.classList.remove('remote-video');
+        e.classList.add('single-peer-video');
+
+        //hide the other elements
+        document.getElementsByClassName('remote-video').forEach((el)=>{
+            el.style.display = 'none';
+        });
     }
 };

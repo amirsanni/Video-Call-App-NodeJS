@@ -114,8 +114,16 @@ window.addEventListener('load', ()=>{
     //When 'close' is clicked to exit single peer video
     document.getElementById('close-single-peer-btn').addEventListener('click', (e)=>{
         //hide single-peer div and show div of all videos
-        document.querySelector('#videos').style.display = 'block';
+        // document.querySelector('#videos').style.display = 'block';
         document.querySelector('#single-video-div').style.display = 'none';
-        document.querySelector('#single-peer-video').srcObject = null;
+        // document.querySelector('#single-peer-video').srcObject = null;
+
+        e.classList.add('remote-video');
+        e.classList.remove('single-peer-video');
+
+        //hide the other elements
+        document.getElementsByClassName('remote-video').forEach((el)=>{
+            el.style.display = 'block';
+        });
     });
 })
