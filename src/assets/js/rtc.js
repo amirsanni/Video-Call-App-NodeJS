@@ -360,6 +360,8 @@ window.addEventListener('load', ()=>{
         document.getElementById('stop-screen-share').addEventListener('click', (e)=>{
             e.preventDefault();
 
+            screen.dispatchEvent('ended');
+
             broadcastUserFullMedia();
         });
     }
