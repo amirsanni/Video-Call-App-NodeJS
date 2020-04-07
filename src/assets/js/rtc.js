@@ -259,42 +259,6 @@ window.addEventListener('load', ()=>{
 
 
 
-        function stopVideo(){
-            return new Promise((res, rej)=>{
-                videoIconElem.children[0].classList.remove('fa-video');
-                videoIconElem.children[0].classList.add('fa-video-slash');
-                videoIconElem.setAttribute('title', 'Show Video');
-
-                if(myStream && myStream.getVideoTracks().length){
-                    myStream.getVideoTracks().forEach(track => track.stop());
-                }
-
-                res();
-            });
-        }
-
-
-
-        function broadcastAudioOnly(){
-            stopVideo();
-            // .then(()=>{
-            //     h.getUserAudio().then((stream)=>{
-            //         toggleShareIcons(false);
-    
-            //         //save my stream
-            //         myStream = stream;
-    
-            //         //share the new stream with all partners
-            //         renegotiate(stream);
-            //     }).catch((e)=>{
-            //         console.error('Audio only error: '+e);
-            //     });
-            // });
-            
-        }
-
-
-
         function broadcastNewTracks(stream){
             document.getElementById('local').srcObject = stream;
 
@@ -313,28 +277,6 @@ window.addEventListener('load', ()=>{
             let sender = recipientPeer.getSenders ? recipientPeer.getSenders().find(s => s.track && s.track.kind === 'video') : false;
             
             sender ? sender.replaceTrack(stream) : '';
-        }
-
-
-
-        function renegotiate(stream){
-            for(let p in pc){
-                let pName = pc[p];
-                
-                if(typeof pc[pName] == 'object'){
-                    stream.getTracks().forEach((track)=>{
-                        pc[pName].addTrack(track, stream);//should trigger negotiationneeded event
-                    });
-
-                    pc[pName].onnegotiationneeded = async ()=>{
-                        let offer = await pc[pName].createOffer();
-                        
-                        await pc[pName].setLocalDescription(offer);
-                    
-                        socket.emit('sdp', {description:pc[pName].localDescription, to:pName, sender:socketId});
-                    };
-                }
-            }
         }
 
 
@@ -370,14 +312,14 @@ window.addEventListener('load', ()=>{
         document.getElementById('toggle-video').addEventListener('click', (e)=>{
             e.preventDefault();
 
-            // myStream.getVideoTracks()[0].enabled = !(myStream.getVideoTracks()[0].enabled);
-            if(myStream.getVideoTracks().length){
-                broadcastAudioOnly();
-            }
+            myStream.getVideoTracks()[0].enabled = !(myStream.getVideoTracks()[0].enabled);
 
-            else{
-                broadcastUserFullMedia();
-            }
+            //toggle icon
+            e.target.classList.toggle('fa-video');
+            e.target.classList.toggle('fa-video-slash');
+            
+            let elem = document.getElementById('toggle-video');
+            elem.setAttribute('title', elem.getAttribute('title') == 'Hide Video' ? 'Show Video' : 'Hide Video');
         });
 
 
