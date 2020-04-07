@@ -265,9 +265,11 @@ window.addEventListener('load', ()=>{
                 videoIconElem.children[0].classList.add('fa-video-slash');
                 videoIconElem.setAttribute('title', 'Show Video');
 
-                if(myStream && myStream.getVideoTracks().length){
-                    myStream.getVideoTracks().forEach(track => track.stop());
+                if(myStream && myStream.getTracks().length){
+                    myStream.getTracks().forEach(track => track.stop());
                 }
+
+                myStream = null;
 
                 res();
             });
@@ -319,8 +321,6 @@ window.addEventListener('load', ()=>{
         function renegotiate(stream){
             for(let p in pc){
                 let pName = pc[p];
-
-                pc[pName].removeTrack(pc[pName].getSenders());
                 
                 if(typeof pc[pName] == 'object'){
                     stream.getTracks().forEach((track)=>{
