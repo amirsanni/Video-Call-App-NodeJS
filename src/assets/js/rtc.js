@@ -327,7 +327,6 @@ window.addEventListener('load', ()=>{
         document.getElementById('toggle-video').addEventListener('click', (e)=>{
             e.preventDefault();
 
-            // myStream.getVideoTracks()[0].enabled = !(myStream.getVideoTracks()[0].enabled);
             let elem = document.getElementById('toggle-video');
             
             if(myStream.getVideoTracks()[0].enabled){
