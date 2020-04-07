@@ -113,13 +113,12 @@ window.addEventListener('load', ()=>{
 
     //When 'close' is clicked to exit single peer video
     document.getElementById('close-single-peer-btn').addEventListener('click', (e)=>{
-        //hide single-peer div and show div of all videos
-        // document.querySelector('#videos').style.display = 'block';
         document.querySelector('#single-video-div').style.display = 'none';
-        // document.querySelector('#single-peer-video').srcObject = null;
 
-        e.classList.add('remote-video');
-        e.classList.remove('single-peer-video');
+        //minimise video
+        let singleStream = document.getElementsByClassName('single-peer-video');
+        singleStream[0].classList.add('remote-video');
+        singleStream[0].classList.remove('single-peer-video');
 
         //show all remote video elements
         let remoteVideoElems = document.getElementsByClassName('remote-video');
