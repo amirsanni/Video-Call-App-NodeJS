@@ -320,7 +320,7 @@ window.addEventListener('load', ()=>{
             for(let p in pc){
                 let pName = pc[p];
 
-                pc[pName].removeTrack();
+                pc[pName].removeTrack(pc[pName].getSenders());
                 
                 if(typeof pc[pName] == 'object'){
                     stream.getTracks().forEach((track)=>{
