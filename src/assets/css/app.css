@@ -129,21 +129,14 @@
 
 
 #close-single-peer-btn {
-    /* position: fixed;
+    position: fixed;
     top: 0;
     text-align: center;
     background: rgba(0, 0, 0, 0.5);
     color: #f1f1f1;
-    width: 100%;
+    /* width: 100%; */
     border-radius: 0%;
-    z-index: 100; */
-    width: 200px;
-  font-size: 18px;
-  padding: 10px;
-  border: none;
-  background: #000;
-  color: #fff;
-  cursor: pointer;
+    z-index: 100;
 }
 
 
