@@ -276,19 +276,20 @@ window.addEventListener('load', ()=>{
 
 
         function broadcastAudioOnly(){
-            stopVideo().then(()=>{
-                h.getUserAudio().then((stream)=>{
-                    toggleShareIcons(false);
+            stopVideo();
+            // .then(()=>{
+            //     h.getUserAudio().then((stream)=>{
+            //         toggleShareIcons(false);
     
-                    //save my stream
-                    myStream = stream;
+            //         //save my stream
+            //         myStream = stream;
     
-                    //share the new stream with all partners
-                    renegotiate(stream);
-                }).catch((e)=>{
-                    console.error('Audio only error: '+e);
-                });
-            });
+            //         //share the new stream with all partners
+            //         renegotiate(stream);
+            //     }).catch((e)=>{
+            //         console.error('Audio only error: '+e);
+            //     });
+            // });
             
         }
 
