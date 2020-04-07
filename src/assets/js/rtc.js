@@ -250,11 +250,23 @@ window.addEventListener('load', ()=>{
 
                 //When the stop sharing button shown by the browser is clicked
                 screen.getVideoTracks()[0].addEventListener('ended', ()=>{
-                    broadcastUserFullMedia();
+                    stopSharingScreen();
                 });
             }).catch((e)=>{
                 broadcastUserFullMedia();
             });
+        }
+
+
+
+        function stopSharingScreen(){
+            return new Promise((res, rej)=>{
+                screen.getTracks().length ? screen.getTracks().forEach(track => track.stop()) : '';
+
+                res();
+            }).then(()=>{
+                broadcastUserFullMedia();
+            }).catch();
         }
 
 
@@ -360,9 +372,7 @@ window.addEventListener('load', ()=>{
         document.getElementById('stop-screen-share').addEventListener('click', (e)=>{
             e.preventDefault();
 
-            screen.dispatchEvent('ended');
-
-            broadcastUserFullMedia();
+            stopSharingScreen();
         });
     }
 });
