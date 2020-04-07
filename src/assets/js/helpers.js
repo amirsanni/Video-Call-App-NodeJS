@@ -180,5 +180,10 @@ export default {
             document.querySelector('#share-screen').removeAttribute('hidden');
             document.querySelector('#stop-screen-share').setAttribute('hidden', true);
         }
+    },
+
+
+    toggleVideoBtnDisabled(disabled){
+        document.getElementById('toggle-video').disabled = disabled;
     }
 };
