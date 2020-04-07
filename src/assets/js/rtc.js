@@ -313,7 +313,7 @@ window.addEventListener('load', ()=>{
         function replaceVideoTrack(stream, recipientPeer){
             let sender = recipientPeer.getSenders ? recipientPeer.getSenders().find(s => s.track && s.track.kind === 'video') : false;
             
-            sender ? sender.replaceVideoTrack(stream) : '';
+            sender ? sender.replaceTrack(stream) : '';
         }
 
 
