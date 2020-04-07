@@ -1,5 +1,5 @@
 .chat-col{
-    right: 0;
+    right: -100vw;
     bottom: 0;
     top: 40.5px;
     z-index: 1000;
@@ -10,6 +10,15 @@
     padding-bottom: 40px;
     padding-top: 15px;
     min-height: 100vh;
+}
+
+.chat-col.chat-opened {
+    right: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: all 0.3s ease !important;
+    -webkit-transition: all 0.3s ease !important;
+    -moz-transition: all 0.3s ease !important;
 }
 
 #chat-messages{
@@ -53,15 +62,15 @@
     overflow-x: scroll;
 }
 
+.main{
+    padding-top: 40px;
+}
+
 
 .remote-video{
     position: relative;
     object-fit: cover !important;
     height: 300px;
-}
-
-.main{
-    padding-top: 40px;
 }
 
 .local-video{
@@ -70,6 +79,13 @@
     position: fixed;
     width: 250px;
     z-index: 1000;
+}
+
+
+.single-peer-video{
+    object-fit: fill;
+    height: 93vh;
+    width: 100vw;
 }
 
 
@@ -102,6 +118,24 @@
 }
 
 
+#close-single-peer-btn {
+    position: fixed;
+    top: 0;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+    color: #f1f1f1;
+    width: 100%;
+    border-radius: 0%;
+    z-index: 100;
+}
+
+
+.pointer{
+    cursor: pointer;
+}
+
+
+
 @media only screen and (max-width:767px){
     .chat-col{
         right: -100vw;
@@ -109,15 +143,6 @@
         z-index: 99999;
         transition: 0.3s;
         top: 47px;
-    }
-
-    .chat-col.chat-opened {
-        right: 0;
-        overflow-y: auto;
-        overflow-x: hidden;
-        transition: all 0.3s ease !important;
-        -webkit-transition: all 0.3s ease !important;
-        -moz-transition: all 0.3s ease !important;
     }
   
     .chat-opened::-webkit-scrollbar {
@@ -139,5 +164,9 @@
     .chat-box{
         bottom: 90px;
         margin-bottom: 0px;
+    }
+
+    .single-peer-video{
+        height: 100vh;
     }
 }

@@ -185,5 +185,15 @@ export default {
 
     toggleVideoBtnDisabled(disabled){
         document.getElementById('toggle-video').disabled = disabled;
+    },
+
+
+    maximiseStream(e){
+        document.querySelector('#videos').style.display = 'none';
+        document.querySelector('#single-video-div').style.display = 'block';
+        document.querySelector('#single-peer-video').srcObject = e.srcObject;
+
+        //mute the original video
+        // e.muted = true;
     }
 };
