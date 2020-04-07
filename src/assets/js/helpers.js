@@ -191,8 +191,8 @@ export default {
     maximiseStream(e){
         document.querySelector('#close-single-peer-btn').style.display = 'block';
 
-        e.classList.remove('remote-video');
-        e.classList.add('single-peer-video');
+        e.target.parentElement.previousElementSibling.classList.remove('remote-video');
+        e.target.parentElement.previousElementSibling.classList.add('single-peer-video');
 
         //hide the other elements
         let remoteVideoElems = document.getElementsByClassName('remote-video');
@@ -201,6 +201,21 @@ export default {
             for(let i = 0; i < remoteVideoElems.length; i++){
                 remoteVideoElems[i].style.display = 'none';
             }
+        }
+    },
+
+
+    singleStreamToggleMute(e){
+        if(e.target.classList.contains('fa-microphone')){
+            e.target.muted = true;
+            e.target.classList.add('fa-microphone-slash');
+            e.target.classList.remove('fa-microphone');
+        }
+
+        else{
+            e.target.muted = false;
+            e.target.classList.add('fa-microphone');
+            e.target.classList.remove('fa-microphone-slash');
         }
     }
 };

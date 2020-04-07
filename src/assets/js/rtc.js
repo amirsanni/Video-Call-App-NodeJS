@@ -198,11 +198,18 @@ window.addEventListener('load', ()=>{
                     newVid.srcObject = str;
                     newVid.autoplay = true;
                     newVid.className = 'remote-video';
+
+                    //video controls elements
+                    let controlDiv = document.createElement('div');
+                    controlDiv.className = 'remote-video-controls';
+                    controlDiv.appendChild('<i class="fa fa-microphone text-white pr-3 mute-remote-mic" title="Mute"></i>');
+                    controlDiv.appendChild('<i class="fa fa-expand text-white expand-remote-video" title="Expand"></i>');
                     
                     //create a new div for card
                     let cardDiv = document.createElement('div');
                     cardDiv.className = 'card mb-3';
                     cardDiv.appendChild(newVid);
+                    cardDiv.appendChild(controlDiv);
                     
                     //create a new div for everything
                     let div = document.createElement('div');
