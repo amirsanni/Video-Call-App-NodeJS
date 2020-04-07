@@ -136,8 +136,8 @@ window.addEventListener('load', ()=>{
             }
 
             else if(myStream){
-                stream.getTracks().forEach((track)=>{
-                    pc[partnerName].addTrack(track, stream);//should trigger negotiationneeded event
+                myStream.getTracks().forEach((track)=>{
+                    pc[partnerName].addTrack(track, myStream);//should trigger negotiationneeded event
                 });
             }
 
