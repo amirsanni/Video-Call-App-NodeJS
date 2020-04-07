@@ -329,12 +329,12 @@ window.addEventListener('load', ()=>{
 
             let elem = document.getElementById('toggle-video');
             
-            if(myStream.getVideoTracks().length){
+            if(myStream.getVideoTracks()[0].enabled){
                 e.target.classList.remove('fa-video');
                 e.target.classList.add('fa-video-slash');
                 elem.setAttribute('title', 'Show Video');
 
-                myStream.getVideoTracks()[0].stop();
+                myStream.getVideoTracks()[0].enabled = false;
             }
 
             else{
@@ -342,8 +342,7 @@ window.addEventListener('load', ()=>{
                 e.target.classList.add('fa-video');
                 elem.setAttribute('title', 'Hide Video');
 
-                // myStream.getVideoTracks()[0].enabled = true;
-                broadcastUserFullMedia();
+                myStream.getVideoTracks()[0].enabled = true;
             }
         });
 
