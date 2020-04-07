@@ -49,12 +49,50 @@ export default {
     },
 
 
-    getUserMedia(){
+    getUserFullMedia(){
         if(this.userMediaAvailable()){
             return navigator.mediaDevices.getUserMedia({
                 video: true, 
                 audio: {
-                    echoCancellation: true
+                    echoCancellation: true,
+                    noiseSuppression: true
+                }
+            });
+        }
+
+        else{
+            throw new Error('User media not available');
+        }
+    },
+
+
+    getUserAudio(){
+        if(this.userMediaAvailable()){
+            return navigator.mediaDevices.getUserMedia({
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true
+                }
+            });
+        }
+
+        else{
+            throw new Error('User media not available');
+        }
+    },
+
+
+
+    shareScreen(){
+        if(this.userMediaAvailable()){
+            return navigator.mediaDevices.getDisplayMedia({
+                video: {
+                    cursor: "always"
+                },
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    sampleRate: 44100
                 }
             });
         }
