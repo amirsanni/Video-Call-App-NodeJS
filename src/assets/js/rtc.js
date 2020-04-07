@@ -120,10 +120,7 @@ window.addEventListener('load', ()=>{
             pc[partnerName] = new RTCPeerConnection(h.getIceServer());
             
             if(screen){
-                // myStream.getTracks().forEach((track)=>{
-                //     pc[partnerName].addTrack(track, myStream);//should trigger negotiationneeded event
-                // });
-                replaceTrack(screen.getVideoTracks()[0], pc[partnerName]);
+                replaceVideoTrack(screen.getVideoTracks()[0], pc[partnerName]);
             }
 
             else{
@@ -242,24 +239,22 @@ window.addEventListener('load', ()=>{
 
 
         function shareScreen(){
-            // stopVideo().then(()=>{
-                h.shareScreen().then((stream)=>{
-                    toggleShareIcons(true);
+            h.shareScreen().then((stream)=>{
+                toggleShareIcons(true);
 
-                    //save my screen stream
-                    screen = stream;
+                //save my screen stream
+                screen = stream;
 
-                    //share the new stream with all partners
-                    broadcastNewTracks(stream);
+                //share the new stream with all partners
+                broadcastNewTracks(stream);
 
-                    //When the stop sharing button shown by the browser is clicked
-                    stream.getVideoTracks()[0].addEventListener('ended', ()=>{
-                        broadcastUserFullMedia();
-                    });
-                }).catch((e)=>{
+                //When the stop sharing button shown by the browser is clicked
+                stream.getVideoTracks()[0].addEventListener('ended', ()=>{
                     broadcastUserFullMedia();
                 });
-            // });
+            }).catch((e)=>{
+                broadcastUserFullMedia();
+            });
         }
 
 
@@ -281,20 +276,19 @@ window.addEventListener('load', ()=>{
 
 
         function broadcastAudioOnly(){
-            stopVideo();
-            // .then(()=>{
-            //     h.getUserAudio().then((stream)=>{
-            //         toggleShareIcons(false);
+            stopVideo().then(()=>{
+                h.getUserAudio().then((stream)=>{
+                    toggleShareIcons(false);
     
-            //         //save my stream
-            //         myStream = stream;
+                    //save my stream
+                    myStream = stream;
     
-            //         //share the new stream with all partners
-            //         broadcastNewTracks(stream);
-            //     }).catch((e)=>{
-            //         console.error('Audio only error: '+e);
-            //     });
-            // });
+                    //share the new stream with all partners
+                    renegotiate(stream);
+                }).catch((e)=>{
+                    console.error('Audio only error: '+e);
+                });
+            });
             
         }
 
@@ -307,29 +301,39 @@ window.addEventListener('load', ()=>{
                 let pName = pc[p];
                 
                 if(typeof pc[pName] == 'object'){
-                    // stream.getTracks().forEach((track)=>{
-                    //     pc[pName].addTrack(track, stream);//should trigger negotiationneeded event
-                    // });
-
-                    // pc[pName].onnegotiationneeded = async ()=>{console.log('neg needed');
-                    //     let offer = await pc[pName].createOffer();
-                        
-                    //     await pc[pName].setLocalDescription(offer);console.log(pName);
-                    
-                    //     socket.emit('sdp', {description:pc[pName].localDescription, to:pName, sender:socketId});
-                    // };
-
-                    replaceTrack(stream.getVideoTracks()[0], pc[pName]);
+                    replaceVideoTrack(stream.getVideoTracks()[0], pc[pName]);
                 }
             }
         }
 
 
 
-        function replaceTrack(stream, recipientPeer){
+        function replaceVideoTrack(stream, recipientPeer){
             let sender = recipientPeer.getSenders ? recipientPeer.getSenders().find(s => s.track && s.track.kind === 'video') : false;
             
-            sender ? sender.replaceTrack(stream) : '';
+            sender ? sender.replaceVideoTrack(stream) : '';
+        }
+
+
+
+        function renegotiate(stream){
+            for(let p in pc){
+                let pName = pc[p];
+                
+                if(typeof pc[pName] == 'object'){
+                    stream.getTracks().forEach((track)=>{
+                        pc[pName].addTrack(track, stream);//should trigger negotiationneeded event
+                    });
+
+                    pc[pName].onnegotiationneeded = async ()=>{
+                        let offer = await pc[pName].createOffer();
+                        
+                        await pc[pName].setLocalDescription(offer);
+                    
+                        socket.emit('sdp', {description:pc[pName].localDescription, to:pName, sender:socketId});
+                    };
+                }
+            }
         }
 
 
