@@ -269,8 +269,6 @@ window.addEventListener('load', ()=>{
                     myStream.getVideoTracks().forEach(track => track.stop());
                 }
 
-                myStream = null;
-
                 res();
             });
         }
