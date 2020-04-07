@@ -329,7 +329,7 @@ window.addEventListener('load', ()=>{
 
             // myStream.getVideoTracks()[0].enabled = !(myStream.getVideoTracks()[0].enabled);
             let elem = document.getElementById('toggle-video');
-            console.info(myStream.getVideoTracks()[0].enabled);
+            
             if(myStream.getVideoTracks()[0].enabled){
                 e.target.classList.remove('fa-video');
                 e.target.classList.add('fa-video-slash');
