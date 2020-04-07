@@ -191,8 +191,6 @@ export default {
     maximiseStream(e){
         document.querySelector('#close-single-peer-btn').style.display = 'block';
 
-        //mute the original video
-        // e.muted = true;
         e.classList.remove('remote-video');
         e.classList.add('single-peer-video');
 
