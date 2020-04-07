@@ -119,7 +119,7 @@ window.addEventListener('load', ()=>{
         function init(createOffer, partnerName){
             pc[partnerName] = new RTCPeerConnection(h.getIceServer());
             
-            if(screen){
+            if(screen && screen.getVideoTracks().length){
                 replaceVideoTrack(screen.getVideoTracks()[0], pc[partnerName]);
             }
 
@@ -249,7 +249,7 @@ window.addEventListener('load', ()=>{
                 broadcastNewTracks(stream);
 
                 //When the stop sharing button shown by the browser is clicked
-                stream.getVideoTracks()[0].addEventListener('ended', ()=>{
+                screen.getVideoTracks()[0].addEventListener('ended', ()=>{
                     broadcastUserFullMedia();
                 });
             }).catch((e)=>{
@@ -312,14 +312,24 @@ window.addEventListener('load', ()=>{
         document.getElementById('toggle-video').addEventListener('click', (e)=>{
             e.preventDefault();
 
-            myStream.getVideoTracks()[0].enabled = !(myStream.getVideoTracks()[0].enabled);
-
-            //toggle icon
-            e.target.classList.toggle('fa-video');
-            e.target.classList.toggle('fa-video-slash');
-            
+            // myStream.getVideoTracks()[0].enabled = !(myStream.getVideoTracks()[0].enabled);
             let elem = document.getElementById('toggle-video');
-            elem.setAttribute('title', elem.getAttribute('title') == 'Hide Video' ? 'Show Video' : 'Hide Video');
+
+            if(myStream.getVideoTracks()[0].enabled){
+                e.target.classList.remove('fa-video');
+                e.target.classList.add('fa-video-slash');
+                elem.setAttribute('title', 'Show Video');
+
+                myStream.getVideoTracks()[0].enabled = false;
+            }
+
+            else{
+                e.target.classList.remove('fa-video-slash');
+                e.target.classList.add('fa-video');
+                elem.setAttribute('title', 'Hide Video');
+
+                myStream.getVideoTracks()[0].enabled = true;
+            }
         });
 
 
