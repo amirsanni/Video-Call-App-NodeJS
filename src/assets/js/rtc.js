@@ -281,7 +281,7 @@ window.addEventListener('load', ()=>{
                     stopSharingScreen();
                 });
             }).catch((e)=>{
-                broadcastUserFullMedia();
+                // broadcastUserFullMedia();
                 console.error(e);
             });
         }
@@ -297,8 +297,9 @@ window.addEventListener('load', ()=>{
 
                 res();
             }).then(()=>{
-                //Only switch video on if it was shared before screen sharing
-                myStream.getVideoTracks()[0].enabled ? broadcastUserFullMedia() : h.toggleShareIcons(false);
+                h.toggleShareIcons(false);
+                broadcastNewTracks(myStream);
+                // myStream.getVideoTracks()[0].enabled ? broadcastUserFullMedia() : h.toggleShareIcons(false);
             }).catch();
         }
 
