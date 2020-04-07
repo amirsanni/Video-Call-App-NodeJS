@@ -300,7 +300,11 @@ window.addEventListener('load', ()=>{
             let videoStream = show ? myStream : null;
 
             for(let p in pc){
-                replaceVideoTrack(videoStream, pc[pc[p]]);
+                let pName = pc[p];
+
+                if(typeof pc[pName] == 'object'){
+                    replaceVideoTrack(videoStream, pc[pName]);
+                }
             }
         }
 
