@@ -33,14 +33,8 @@ window.addEventListener('load', ()=>{
         var videoIconElem = document.querySelector('#toggle-video');
 
         //Get user video by default
-        h.getUserFullMedia().then((stream)=>{
-            //save my stream
-            myStream = stream;
+        getAndSetUserStream();
 
-            document.getElementById('local').srcObject = stream;
-        }).catch((e)=>{
-            console.error(`stream error: ${e}`);
-        });
 
         socket.on('connect', ()=>{
             //set socketId
@@ -107,6 +101,18 @@ window.addEventListener('load', ()=>{
                 h.addChat(data, 'remote');
             })
         });
+
+
+        function getAndSetUserStream(){
+            h.getUserFullMedia().then((stream)=>{
+                //save my stream
+                myStream = stream;
+    
+                document.getElementById('local').srcObject = stream;
+            }).catch((e)=>{
+                console.error(`stream error: ${e}`);
+            });
+        }
 
 
         function sendMsg(msg){
@@ -351,6 +357,8 @@ window.addEventListener('load', ()=>{
                 elem.setAttribute('title', 'Show Video');
 
                 myStream.getVideoTracks()[0].enabled = false;
+
+                broadcastNewTracks(myStream.getVideoTracks()[0]);
             }
 
             else{
@@ -359,6 +367,8 @@ window.addEventListener('load', ()=>{
                 elem.setAttribute('title', 'Hide Video');
 
                 myStream.getVideoTracks()[0].enabled = true;
+
+                broadcastNewTracks(myStream.getVideoTracks()[0]);
             }
         });
 
