@@ -12,7 +12,8 @@ Just run `npm install` and you're good to go.
 - Toggling of audio stream (mute & unmute)
 - Screen sharing
 - Text chat
-- Mute individual participant (To-do)
+- Mute individual participant
+- Expand participants' stream (UI can be better)
 - Recording (To-do)
 
  
