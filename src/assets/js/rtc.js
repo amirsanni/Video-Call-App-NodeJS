@@ -28,7 +28,13 @@ window.addEventListener('load', ()=>{
         let socket = io('/stream');
 
         var socketId = '';
-        var myStream = '';
+        var myStream =  '';
+        var screen = '';
+        var videoIconElem = document.querySelector('#toggle-video');
+
+        //Get user video by default
+        getAndSetUserStream();
+
 
         socket.on('connect', ()=>{
             //set socketId
@@ -97,6 +103,18 @@ window.addEventListener('load', ()=>{
         });
 
 
+        function getAndSetUserStream(){
+            h.getUserFullMedia().then((stream)=>{
+                //save my stream
+                myStream = stream;
+    
+                document.getElementById('local').srcObject = stream;
+            }).catch((e)=>{
+                console.error(`stream error: ${e}`);
+            });
+        }
+
+
         function sendMsg(msg){
             let data = {
                 room: room,
@@ -117,18 +135,32 @@ window.addEventListener('load', ()=>{
         function init(createOffer, partnerName){
             pc[partnerName] = new RTCPeerConnection(h.getIceServer());
             
-            h.getUserMedia().then((stream)=>{
-                //save my stream
-                myStream = stream;
-
-                stream.getTracks().forEach((track)=>{
-                    pc[partnerName].addTrack(track, stream);//should trigger negotiationneeded event
+            if(screen && screen.getTracks().length){
+                screen.getTracks().forEach((track)=>{
+                    pc[partnerName].addTrack(track, screen);//should trigger negotiationneeded event
                 });
+            }
 
-                document.getElementById('local').srcObject = stream;
-            }).catch((e)=>{
-                console.error(`stream error: ${e}`);
-            });
+            else if(myStream){
+                myStream.getTracks().forEach((track)=>{
+                    pc[partnerName].addTrack(track, myStream);//should trigger negotiationneeded event
+                });
+            }
+
+            else{
+                h.getUserFullMedia().then((stream)=>{
+                    //save my stream
+                    myStream = stream;
+    
+                    stream.getTracks().forEach((track)=>{
+                        pc[partnerName].addTrack(track, stream);//should trigger negotiationneeded event
+                    });
+    
+                    document.getElementById('local').srcObject = stream;
+                }).catch((e)=>{
+                    console.error(`stream error: ${e}`);
+                });
+            }
 
 
 
@@ -211,6 +243,95 @@ window.addEventListener('load', ()=>{
         }
 
 
+
+        function broadcastUserFullMedia(){
+            h.getUserFullMedia().then((stream)=>{
+                videoIconElem.children[0].classList.add('fa-video');
+                videoIconElem.children[0].classList.remove('fa-video-slash');
+                videoIconElem.setAttribute('title', 'Hide Video');
+
+                toggleShareIcons(false);
+
+                //save my stream
+                myStream = stream;
+
+                //share the new stream with all partners
+                broadcastNewTracks(stream);
+            }).catch();
+        }
+
+
+
+        function shareScreen(){
+            h.shareScreen().then((stream)=>{
+                toggleShareIcons(true);
+
+                //save my screen stream
+                screen = stream;
+
+                //share the new stream with all partners
+                broadcastNewTracks(stream);
+
+                //When the stop sharing button shown by the browser is clicked
+                screen.getVideoTracks()[0].addEventListener('ended', ()=>{
+                    stopSharingScreen();
+                });
+            }).catch((e)=>{
+                broadcastUserFullMedia();
+                console.error(e);
+            });
+        }
+
+
+
+        function stopSharingScreen(){
+            return new Promise((res, rej)=>{
+                screen.getTracks().length ? screen.getTracks().forEach(track => track.stop()) : '';
+
+                res();
+            }).then(()=>{
+                broadcastUserFullMedia();
+            }).catch();
+        }
+
+
+
+        function broadcastNewTracks(stream){
+            document.getElementById('local').srcObject = stream;
+
+            for(let p in pc){
+                let pName = pc[p];
+                
+                if(typeof pc[pName] == 'object'){
+                    replaceVideoTrack(stream.getVideoTracks()[0], pc[pName]);
+                }
+            }
+        }
+
+
+
+        function replaceVideoTrack(stream, recipientPeer){
+            let sender = recipientPeer.getSenders ? recipientPeer.getSenders().find(s => s.track && s.track.kind === 'video') : false;
+            
+            sender ? sender.replaceTrack(stream) : '';
+        }
+
+
+
+        function toggleShareIcons(share){
+            if(share){
+                document.querySelector('#share-screen').setAttribute('hidden', true);
+                document.querySelector('#stop-screen-share').removeAttribute('hidden');
+            }
+
+            else{
+                document.querySelector('#share-screen').removeAttribute('hidden');
+                document.querySelector('#stop-screen-share').setAttribute('hidden', true);
+            }
+        }
+
+
+        //Chat textarea
         document.getElementById('chat-input').addEventListener('keypress', (e)=>{
             if(e.which === 13 && (e.target.value.trim())){
                 e.preventDefault();
@@ -227,11 +348,27 @@ window.addEventListener('load', ()=>{
         document.getElementById('toggle-video').addEventListener('click', (e)=>{
             e.preventDefault();
 
-            myStream.getVideoTracks()[0].enabled = !(myStream.getVideoTracks()[0].enabled);
+            let elem = document.getElementById('toggle-video');
+            
+            if(myStream.getVideoTracks()[0].enabled){
+                e.target.classList.remove('fa-video');
+                e.target.classList.add('fa-video-slash');
+                elem.setAttribute('title', 'Show Video');
 
-            //toggle video icon
-            e.srcElement.classList.toggle('fa-video');
-            e.srcElement.classList.toggle('fa-video-slash');
+                myStream.getVideoTracks()[0].enabled = false;
+
+                broadcastNewTracks(myStream);
+            }
+
+            else{
+                e.target.classList.remove('fa-video-slash');
+                e.target.classList.add('fa-video');
+                elem.setAttribute('title', 'Hide Video');
+
+                myStream.getVideoTracks()[0].enabled = true;
+
+                broadcastNewTracks(myStream);
+            }
         });
 
 
@@ -241,8 +378,27 @@ window.addEventListener('load', ()=>{
             myStream.getAudioTracks()[0].enabled = !(myStream.getAudioTracks()[0].enabled);
 
             //toggle audio icon
-            e.srcElement.classList.toggle('fa-microphone-alt');
-            e.srcElement.classList.toggle('fa-microphone-alt-slash');
+            e.target.classList.toggle('fa-microphone-alt');
+            e.target.classList.toggle('fa-microphone-alt-slash');
+            
+            let elem = document.getElementById('toggle-mute');
+            elem.setAttribute('title', elem.getAttribute('title') == 'Mute' ? 'Unmute' : 'Mute');
+        });
+
+
+        //When user clicks the 'Share screen' button
+        document.getElementById('share-screen').addEventListener('click', (e)=>{
+            e.preventDefault();
+
+            shareScreen();
+        });
+
+
+        //When user clicks the stop sharing button
+        document.getElementById('stop-screen-share').addEventListener('click', (e)=>{
+            e.preventDefault();
+
+            stopSharingScreen();
         });
     }
 });
