@@ -121,9 +121,13 @@ window.addEventListener('load', ()=>{
         e.classList.add('remote-video');
         e.classList.remove('single-peer-video');
 
-        //hide the other elements
-        document.getElementsByClassName('remote-video').forEach((el)=>{
-            el.style.display = 'block';
-        });
+        //show all remote video elements
+        let remoteVideoElems = document.getElementsByClassName('remote-video');
+
+        if(remoteVideoElems.length){
+            for(let i = 0; i < remoteVideoElems.length; i++){
+                remoteVideoElems[i].style.display = 'block';
+            }
+        }
     });
 })

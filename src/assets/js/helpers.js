@@ -199,8 +199,12 @@ export default {
         e.classList.add('single-peer-video');
 
         //hide the other elements
-        document.getElementsByClassName('remote-video').forEach((el)=>{
-            el.style.display = 'none';
-        });
+        let remoteVideoElems = document.getElementsByClassName('remote-video');
+
+        if(remoteVideoElems.length){
+            for(let i = 0; i < remoteVideoElems.length; i++){
+                remoteVideoElems[i].style.display = 'none';
+            }
+        }
     }
 };
