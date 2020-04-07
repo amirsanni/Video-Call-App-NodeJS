@@ -117,14 +117,18 @@
     font-size: 6px !important;
 }
 
-
-#close-single-peer-btn {
+.single-peer-video-toggle-btn-div {
     position: fixed;
     top: 0;
     text-align: center;
     background: rgba(0, 0, 0, 0.5);
     color: #f1f1f1;
     width: 100%;
+    padding: 20px;
+}
+
+
+#close-single-peer-btn {
     border-radius: 0%;
     z-index: 100;
 }
