@@ -85,7 +85,7 @@
 .single-peer-video{
     object-fit: fill;
     height: 93vh;
-    width: 100vw;
+    width: 90vw;
 }
 
 
@@ -168,5 +168,12 @@
 
     .single-peer-video{
         height: 100vh;
+        object-fit: contain;
+
+        /* position: fixed;
+        right: 0;
+        bottom: 0;
+        min-width: 100%;
+        min-height: 100%; */
     }
 }
