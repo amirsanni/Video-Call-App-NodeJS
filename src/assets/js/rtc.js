@@ -329,18 +329,13 @@ window.addEventListener('load', ()=>{
 
             // myStream.getVideoTracks()[0].enabled = !(myStream.getVideoTracks()[0].enabled);
             let elem = document.getElementById('toggle-video');
-
+            console.info(myStream.getVideoTracks()[0].enabled);
             if(myStream.getVideoTracks()[0].enabled){
                 e.target.classList.remove('fa-video');
                 e.target.classList.add('fa-video-slash');
                 elem.setAttribute('title', 'Show Video');
 
-                // myStream.getVideoTracks()[0].enabled = false;
-                let vidTrackLen = myStream.getVideoTracks().length;
-
-                for(let i in vidTrackLen){console.log(i);
-                    myStream.getVideoTracks()[i].enabled = false;
-                }
+                myStream.getVideoTracks()[0].enabled = false;
             }
 
             else{
@@ -348,12 +343,7 @@ window.addEventListener('load', ()=>{
                 e.target.classList.add('fa-video');
                 elem.setAttribute('title', 'Hide Video');
 
-                // myStream.getVideoTracks()[0].enabled = true;
-                let vidTrackLen = myStream.getVideoTracks().length;
-
-                for(let i in vidTrackLen){
-                    myStream.getVideoTracks()[i].enabled = true;
-                }
+                myStream.getVideoTracks()[0].enabled = true;
             }
         });
 
