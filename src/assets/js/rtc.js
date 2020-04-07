@@ -296,20 +296,6 @@ window.addEventListener('load', ()=>{
 
 
 
-        function toggleVideo(show){
-            let videoStream = show ? myStream : null;
-
-            for(let p in pc){
-                let pName = pc[p];
-
-                if(typeof pc[pName] == 'object'){
-                    replaceVideoTrack(videoStream, pc[pName]);
-                }
-            }
-        }
-
-
-
         function toggleShareIcons(share){
             if(share){
                 document.querySelector('#share-screen').setAttribute('hidden', true);
@@ -343,14 +329,12 @@ window.addEventListener('load', ()=>{
 
             let elem = document.getElementById('toggle-video');
             
-            // if(myStream.getVideoTracks()[0].enabled){
-            if(elem.getAttribute('title') == 'Hide Video'){
+            if(myStream.getVideoTracks().length){
                 e.target.classList.remove('fa-video');
                 e.target.classList.add('fa-video-slash');
                 elem.setAttribute('title', 'Show Video');
 
-                // myStream.getVideoTracks()[0].enabled = false;
-                toggleVideo(false);
+                myStream.getVideoTracks()[0].stop();
             }
 
             else{
@@ -359,7 +343,7 @@ window.addEventListener('load', ()=>{
                 elem.setAttribute('title', 'Hide Video');
 
                 // myStream.getVideoTracks()[0].enabled = true;
-                toggleVideo(true);
+                broadcastUserFullMedia();
             }
         });
 
