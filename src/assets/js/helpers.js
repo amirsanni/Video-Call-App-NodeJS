@@ -158,5 +158,27 @@ export default {
         else{
             document.querySelector('#new-chat-notification').removeAttribute('hidden');
         }
+    },
+
+
+
+    replaceVideoTrack(stream, recipientPeer){
+        let sender = recipientPeer.getSenders ? recipientPeer.getSenders().find(s => s.track && s.track.kind === 'video') : false;
+        
+        sender ? sender.replaceTrack(stream) : '';
+    },
+
+
+
+    toggleShareIcons(share){
+        if(share){
+            document.querySelector('#share-screen').setAttribute('hidden', true);
+            document.querySelector('#stop-screen-share').removeAttribute('hidden');
+        }
+
+        else{
+            document.querySelector('#share-screen').removeAttribute('hidden');
+            document.querySelector('#stop-screen-share').setAttribute('hidden', true);
+        }
     }
 };

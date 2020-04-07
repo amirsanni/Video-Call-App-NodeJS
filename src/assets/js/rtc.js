@@ -250,7 +250,7 @@ window.addEventListener('load', ()=>{
                 videoIconElem.children[0].classList.remove('fa-video-slash');
                 videoIconElem.setAttribute('title', 'Hide Video');
 
-                toggleShareIcons(false);
+                h.toggleShareIcons(false);
 
                 //save my stream
                 myStream = stream;
@@ -264,7 +264,7 @@ window.addEventListener('load', ()=>{
 
         function shareScreen(){
             h.shareScreen().then((stream)=>{
-                toggleShareIcons(true);
+                h.toggleShareIcons(true);
 
                 //save my screen stream
                 screen = stream;
@@ -303,30 +303,8 @@ window.addEventListener('load', ()=>{
                 let pName = pc[p];
                 
                 if(typeof pc[pName] == 'object'){
-                    replaceVideoTrack(stream.getVideoTracks()[0], pc[pName]);
+                    h.replaceVideoTrack(stream.getVideoTracks()[0], pc[pName]);
                 }
-            }
-        }
-
-
-
-        function replaceVideoTrack(stream, recipientPeer){
-            let sender = recipientPeer.getSenders ? recipientPeer.getSenders().find(s => s.track && s.track.kind === 'video') : false;
-            
-            sender ? sender.replaceTrack(stream) : '';
-        }
-
-
-
-        function toggleShareIcons(share){
-            if(share){
-                document.querySelector('#share-screen').setAttribute('hidden', true);
-                document.querySelector('#stop-screen-share').removeAttribute('hidden');
-            }
-
-            else{
-                document.querySelector('#share-screen').removeAttribute('hidden');
-                document.querySelector('#stop-screen-share').setAttribute('hidden', true);
             }
         }
 
