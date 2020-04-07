@@ -336,7 +336,11 @@ window.addEventListener('load', ()=>{
                 elem.setAttribute('title', 'Show Video');
 
                 // myStream.getVideoTracks()[0].enabled = false;
-                myStream.getVideoTracks().forEach(track => track.enabled = false);
+                let vidTrackLen = myStream.getVideoTracks().length;
+
+                for(let i in vidTrackLen){
+                    myStream.getVideoTracks()[i].enabled = false;
+                }
             }
 
             else{
@@ -345,7 +349,11 @@ window.addEventListener('load', ()=>{
                 elem.setAttribute('title', 'Hide Video');
 
                 // myStream.getVideoTracks()[0].enabled = true;
-                myStream.getVideoTracks().forEach(track => track.enabled = true);
+                let vidTrackLen = myStream.getVideoTracks().length;
+
+                for(let i in vidTrackLen){
+                    myStream.getVideoTracks()[i].enabled = true;
+                }
             }
         });
 
