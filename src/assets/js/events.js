@@ -3,7 +3,22 @@ import helpers from './helpers.js';
 window.addEventListener('load', ()=>{
     //When the chat icon is clicked
     document.querySelector('#toggle-chat-pane').addEventListener('click', (e)=>{
-        document.querySelector('#chat-pane').classList.toggle('chat-opened');
+        let chatElem = document.querySelector('#chat-pane');
+        let mainSecElem = document.querySelector('#main-section');
+
+        if(chatElem.classList.contains('chat-opened')){
+            chatElem.setAttribute('hidden', true);
+            mainSecElem.classList.remove('col-md-9');
+            mainSecElem.classList.add('col-md-12');
+            chatElem.classList.remove('chat-opened');
+        }
+
+        else{
+            chatElem.attributes.removeNamedItem('hidden');
+            mainSecElem.classList.remove('col-md-12');
+            mainSecElem.classList.add('col-md-9');
+            chatElem.classList.add('chat-opened');          
+        }
 
         //remove the 'New' badge on chat icon (if any) once chat is opened.
         setTimeout(()=>{
@@ -86,5 +101,21 @@ window.addEventListener('load', ()=>{
         else{
             document.querySelector('#err-msg-username').innerHTML = "Please input your name";
         }
+    });
+
+
+    document.addEventListener('click', (e)=>{
+        if(e.target && e.target.classList.contains('remote-video')){
+            helpers.maximiseStream(e.target);
+        }
+    });
+
+
+    //When 'close' is clicked to exit single peer video
+    document.getElementById('close-single-peer-btn').addEventListener('click', (e)=>{
+        //hide single-peer div and show div of all videos
+        document.querySelector('#videos').style.display = 'block';
+        document.querySelector('#single-video-div').style.display = 'none';
+        document.querySelector('#single-peer-video').srcObject = null;
     });
 })

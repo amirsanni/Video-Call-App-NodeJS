@@ -244,24 +244,6 @@ window.addEventListener('load', ()=>{
 
 
 
-        function broadcastUserFullMedia(){
-            h.getUserFullMedia().then((stream)=>{
-                videoIconElem.children[0].classList.add('fa-video');
-                videoIconElem.children[0].classList.remove('fa-video-slash');
-                videoIconElem.setAttribute('title', 'Hide Video');
-
-                h.toggleShareIcons(false);
-
-                //save my stream
-                myStream = stream;
-
-                //share the new stream with all partners
-                broadcastNewTracks(stream);
-            }).catch();
-        }
-
-
-
         function shareScreen(){
             h.shareScreen().then((stream)=>{
                 h.toggleShareIcons(true);
@@ -281,8 +263,7 @@ window.addEventListener('load', ()=>{
                     stopSharingScreen();
                 });
             }).catch((e)=>{
-                // broadcastUserFullMedia();
-                console.error(e);
+                // console.error(e);
             });
         }
 
@@ -299,7 +280,6 @@ window.addEventListener('load', ()=>{
             }).then(()=>{
                 h.toggleShareIcons(false);
                 broadcastNewTracks(myStream);
-                // myStream.getVideoTracks()[0].enabled ? broadcastUserFullMedia() : h.toggleShareIcons(false);
             }).catch();
         }
 

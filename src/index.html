@@ -37,7 +37,7 @@
                     <i class="fa fa-desktop text-primary"></i>
                 </button>
 
-                <button class="btn btn-sm text-white pull-right d-md-none btn-no-effect" id='toggle-chat-pane'>
+                <button class="btn btn-sm text-white pull-right btn-no-effect" id='toggle-chat-pane'>
                     <i class="fa fa-comment"></i> <span class="badge badge-danger very-small font-weight-lighter" id='new-chat-notification' hidden>New</span>
                 </button>
 
@@ -106,11 +106,16 @@
             </div>
             
             <div class="row">
-                <div class="col-md-9 mt-3 mb-3 main">
-                    <div class="row" id='videos'></div>
+                <div class="col-md-12 main" id='main-section'>
+                    <div class="row mt-3 mb-2" id='videos'></div>
+
+                    <div class="row" id='single-video-div' style="display: none;">
+                        <button class="btn btn-block mt-5 text-white pointer border-0" id='close-single-peer-btn'>Exit</button>
+                        <video class="single-peer-video" id='single-peer-video' autoplay></video>
+                    </div>
                 </div>
 
-                <div class="col-md-3 chat-col d-print-none mb-2 bg-info" id='chat-pane'>
+                <div class="col-md-3 chat-col d-print-none mb-2 bg-info" id='chat-pane' hidden>
                     <div class="row">
                         <div class="col-12 text-center h2 mb-3">CHAT</div>
                     </div>
