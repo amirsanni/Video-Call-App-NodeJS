@@ -58,7 +58,6 @@
     position: relative;
     object-fit: cover !important;
     height: 300px;
-    border: none;
 }
 
 .main{
