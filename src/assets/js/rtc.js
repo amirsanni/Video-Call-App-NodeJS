@@ -28,9 +28,19 @@ window.addEventListener('load', ()=>{
         let socket = io('/stream');
 
         var socketId = '';
-        var myStream = '';
+        var myStream =  '';
         var screen = '';
         var videoIconElem = document.querySelector('#toggle-video');
+
+        //Get user video by default
+        h.getUserFullMedia().then((stream)=>{
+            //save my stream
+            myStream = stream;
+
+            document.getElementById('local').srcObject = stream;
+        }).catch((e)=>{
+            console.error(`stream error: ${e}`);
+        });
 
         socket.on('connect', ()=>{
             //set socketId
@@ -122,6 +132,12 @@ window.addEventListener('load', ()=>{
             if(screen && screen.getTracks().length){
                 screen.getTracks().forEach((track)=>{
                     pc[partnerName].addTrack(track, screen);//should trigger negotiationneeded event
+                });
+            }
+
+            else if(myStream){
+                stream.getTracks().forEach((track)=>{
+                    pc[partnerName].addTrack(track, stream);//should trigger negotiationneeded event
                 });
             }
 
