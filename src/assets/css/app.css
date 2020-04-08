@@ -98,6 +98,10 @@
     position: fixed;
     width: 250px;
     z-index: 1000;
+    -ms-transform: scaleX(-1);
+    -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
 }
 
 
@@ -152,14 +156,6 @@
 
 .pointer{
     cursor: pointer;
-}
-
-
-video {
-    -ms-transform: scaleX(-1);
-    -moz-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
 }
 
 
