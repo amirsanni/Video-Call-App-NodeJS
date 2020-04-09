@@ -171,14 +171,18 @@ export default {
 
 
     toggleShareIcons(share){
+        let shareIconElem = document.querySelector('#share-screen');
+        
         if(share){
-            document.querySelector('#share-screen').setAttribute('hidden', true);
-            document.querySelector('#stop-screen-share').removeAttribute('hidden');
+            shareIconElem.setAttribute('title', 'Stop sharing screen');
+            shareIconElem.children[0].classList.add('text-primary');
+            shareIconElem.children[0].classList.remove('text-white');
         }
 
         else{
-            document.querySelector('#share-screen').removeAttribute('hidden');
-            document.querySelector('#stop-screen-share').setAttribute('hidden', true);
+            shareIconElem.setAttribute('title', 'Share screen');
+            shareIconElem.children[0].classList.add('text-white');
+            shareIconElem.children[0].classList.remove('text-primary');
         }
     },
 

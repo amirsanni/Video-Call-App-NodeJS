@@ -271,7 +271,7 @@ window.addEventListener('load', ()=>{
                     stopSharingScreen();
                 });
             }).catch((e)=>{
-                // console.error(e);
+                console.error(e);
             });
         }
 
@@ -288,7 +288,9 @@ window.addEventListener('load', ()=>{
             }).then(()=>{
                 h.toggleShareIcons(false);
                 broadcastNewTracks(myStream, 'video');
-            }).catch();
+            }).catch((e)=>{
+                console.error(e);
+            });
         }
 
 
@@ -423,15 +425,13 @@ window.addEventListener('load', ()=>{
         document.getElementById('share-screen').addEventListener('click', (e)=>{
             e.preventDefault();
 
-            shareScreen();
-        });
+            if(screen && screen.getVideoTracks().length && screen.getVideoTracks()[0].readyState != 'ended'){
+                stopSharingScreen();
+            }
 
-
-        //When user clicks the stop sharing button
-        document.getElementById('stop-screen-share').addEventListener('click', (e)=>{
-            e.preventDefault();
-
-            stopSharingScreen();
+            else{
+                shareScreen();
+            }
         });
 
 
