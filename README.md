@@ -14,7 +14,8 @@ Just run `npm install` and you're good to go.
 - Text chat
 - Mute individual participant
 - Expand participants' stream (UI can be better)
-- Recording (To-do)
+- Screen Recording
+- Video Recording
 
  
 # Demo
