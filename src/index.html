@@ -14,9 +14,30 @@
         <script type="module" src='assets/js/events.js'></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/7.3.0/adapter.min.js" integrity="sha256-2qQheewaqnZlXJ3RJRghVUwD/3fD9HNqxh4C+zvgmF4=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js'></script>
     </head>
 
     <body>
+        <div class="custom-modal" id='recording-options-modal'>
+            <div class="custom-modal-content">
+                <div class="row text-center">
+                    <div class="col-md-6 mb-2">
+                        <span class="record-option" id='record-video'>Record video</span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <span class="record-option" id='record-screen'>Record screen</span>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-12 text-center">
+                        <button class="btn btn-outline-danger" id='closeModal'>Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
         <nav class="navbar fixed-top bg-info rounded-0 d-print-none">
             <div class="text-white">Video Call</div>
 
@@ -35,6 +56,10 @@
 
                 <button class="btn btn-sm rounded-0 btn-no-effect" id='stop-screen-share' title="Stop Sharing Screen" hidden>
                     <i class="fa fa-desktop text-primary"></i>
+                </button>
+
+                <button class="btn btn-sm rounded-0 btn-no-effect" id='record' title="Record">
+                    <i class="fa fa-dot-circle text-white"></i>
                 </button>
 
                 <button class="btn btn-sm text-white pull-right btn-no-effect" id='toggle-chat-pane'>
@@ -106,8 +131,8 @@
             </div>
             
             <div class="row">
-                <div class="col-md-12 main" id='main-section'>
-                    <button class="btn btn-block mt-5 text-white pointer border-0" id='close-single-peer-btn' style="display: none;">Exit</button>
+                <button class="btn btn-block mt-5 text-white pointer border-0" id='close-single-peer-btn' style="display: none;">Exit</button>
+                <div class="col-md-12 main" id='main-section'>                    
                     <div class="row mt-2 mb-2" id='videos'></div>
                 </div>
 

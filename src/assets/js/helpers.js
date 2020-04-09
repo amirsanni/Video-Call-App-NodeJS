@@ -217,5 +217,29 @@ export default {
             e.target.classList.add('fa-microphone');
             e.target.classList.remove('fa-microphone-slash');
         }
+    },
+
+
+    saveRecordedStream(stream, user){
+        let blob = new Blob(stream, {type:'video/webm'});
+
+        let file = new File([blob], `${user}-${moment().unix()}-record.webm`);
+
+        saveAs(file);
+    },
+
+
+    toggleModal(id, show){
+        let el = document.getElementById(id);
+        
+        if(show){             
+            el.style.display = 'block';
+            el.removeAttribute('aria-hidden');
+        }
+
+        else{
+            el.style.display = 'none';
+            el.setAttribute('aria-hidden', true);
+        }
     }
 };

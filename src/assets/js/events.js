@@ -133,4 +133,9 @@ window.addEventListener('load', ()=>{
             }
         }
     });
+
+
+    document.getElementById('closeModal').addEventListener('click', ()=>{
+        helpers.toggleModal('recording-options-modal', false);
+    });
 })
