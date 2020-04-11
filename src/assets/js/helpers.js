@@ -245,5 +245,14 @@ export default {
             el.style.display = 'none';
             el.setAttribute('aria-hidden', true);
         }
+    },
+
+
+
+    setLocalStream(stream, mirrorMode=true){
+        const localVidElem = document.getElementById('local');
+        
+        localVidElem.srcObject = stream;
+        mirrorMode ? localVidElem.classList.add('mirror-mode') : localVidElem.classList.remove('mirror-mode');
     }
 };
