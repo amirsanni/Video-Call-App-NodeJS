@@ -72,7 +72,7 @@ window.addEventListener('load', ()=>{
 
                     h.getUserFullMedia().then(async (stream)=>{
                         if(!document.getElementById('local').srcObject){
-                            document.getElementById('local').srcObject = stream;
+                            h.setLocalStream(stream);
                         }
 
                         //save my stream
@@ -109,7 +109,7 @@ window.addEventListener('load', ()=>{
                 //save my stream
                 myStream = stream;
     
-                document.getElementById('local').srcObject = stream;
+                h.setLocalStream(stream);
             }).catch((e)=>{
                 console.error(`stream error: ${e}`);
             });
@@ -157,7 +157,7 @@ window.addEventListener('load', ()=>{
                         pc[partnerName].addTrack(track, stream);//should trigger negotiationneeded event
                     });
     
-                    document.getElementById('local').srcObject = stream;
+                    h.setLocalStream(stream);
                 }).catch((e)=>{
                     console.error(`stream error: ${e}`);
                 });
@@ -264,7 +264,7 @@ window.addEventListener('load', ()=>{
                 screen = stream;
 
                 //share the new stream with all partners
-                broadcastNewTracks(stream, 'video');
+                broadcastNewTracks(stream, 'video', false);
 
                 //When the stop sharing button shown by the browser is clicked
                 screen.getVideoTracks()[0].addEventListener('ended', ()=>{
@@ -295,8 +295,8 @@ window.addEventListener('load', ()=>{
 
 
 
-        function broadcastNewTracks(stream, type){
-            document.getElementById('local').srcObject = stream;
+        function broadcastNewTracks(stream, type, mirrorMode=true){
+            h.setLocalStream(stream, mirrorMode);
 
             let track = type == 'audio' ? stream.getAudioTracks()[0] : stream.getVideoTracks()[0];
 

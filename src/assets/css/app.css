@@ -98,6 +98,10 @@
     position: fixed;
     width: 250px;
     z-index: 1000;
+}
+
+
+.mirror-mode{
     -ms-transform: scaleX(-1);
     -moz-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
