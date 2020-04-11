@@ -106,6 +106,7 @@ export default {
     getIceServer(){
         // "turns:eu-turn4.xirsys.com:5349?transport=tcp"
         // "turns:eu-turn4.xirsys.com:443?transport=tcp"
+        // "turn:eu-turn4.xirsys.com:80?transport=tcp",
         return {
             iceServers: [
                 {
@@ -116,8 +117,7 @@ export default {
                     credential: "4dd454a6-feee-11e9-b185-6adcafebbb45",
                     urls: [
                         "turn:eu-turn4.xirsys.com:80?transport=udp", 
-                        "turn:eu-turn4.xirsys.com:3478?transport=udp",
-                        "turn:eu-turn4.xirsys.com:80?transport=tcp",
+                        "turn:eu-turn4.xirsys.com:3478?transport=udp",                        
                         "turn:eu-turn4.xirsys.com:3478?transport=tcp"
                     ]
                 }
