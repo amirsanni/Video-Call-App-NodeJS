@@ -107,6 +107,7 @@ export default {
         // "turns:eu-turn4.xirsys.com:5349?transport=tcp"
         // "turns:eu-turn4.xirsys.com:443?transport=tcp"
         // "turn:eu-turn4.xirsys.com:80?transport=tcp",
+        // "turn:eu-turn4.xirsys.com:3478?transport=udp",
         return {
             iceServers: [
                 {
@@ -116,8 +117,7 @@ export default {
                     username: "ml0jh0qMKZKd9P_9C0UIBY2G0nSQMCFBUXGlk6IXDJf8G2uiCymg9WwbEJTMwVeiAAAAAF2__hNSaW5vbGVl", 
                     credential: "4dd454a6-feee-11e9-b185-6adcafebbb45",
                     urls: [
-                        "turn:eu-turn4.xirsys.com:80?transport=udp", 
-                        "turn:eu-turn4.xirsys.com:3478?transport=udp",                        
+                        "turn:eu-turn4.xirsys.com:80?transport=udp",                         
                         "turn:eu-turn4.xirsys.com:3478?transport=tcp"
                     ]
                 }
