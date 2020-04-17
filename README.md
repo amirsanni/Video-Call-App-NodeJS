@@ -1,4 +1,4 @@
-# Video-Call-App-NodeJS
+# Conference Call
 A conference call implementation using WebRTC, Socket.io and Node.js.
 
 
@@ -13,7 +13,7 @@ Just run `npm install` and you're good to go.
 - Screen sharing
 - Text chat
 - Mute individual participant
-- Expand participants' stream (UI can be better)
+- Expand participants' stream
 - Screen Recording
 - Video Recording
 
@@ -24,3 +24,7 @@ You can test at https://chat.1410inc.xyz.
 
 # Note
 You can create a free xirsys account and use their free ice server. You can replace the one used with your own at `src/assets/js/helpers.js`, function `getIceServer()`.
+
+
+# Alternative
+If you prefer to use PHP Web socket (Ratchet) instead of socket.io and NodeJS, check out the PHP version [here](https://github.com/amirsanni/conference-call-ratchet).
