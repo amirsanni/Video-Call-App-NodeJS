@@ -208,18 +208,15 @@ window.addEventListener('load', ()=>{
                     
                     //create a new div for card
                     let cardDiv = document.createElement('div');
-                    cardDiv.className = 'card mb-3';
+                    cardDiv.className = 'card card-sm';
+                    cardDiv.id = partnerName;
                     cardDiv.appendChild(newVid);
                     cardDiv.appendChild(controlDiv);
                     
-                    //create a new div for everything
-                    let div = document.createElement('div');
-                    div.className = 'col-sm-12 col-md-6';
-                    div.id = partnerName;
-                    div.appendChild(cardDiv);
-                    
-                    //put div in videos elem
-                    document.getElementById('videos').appendChild(div);
+                    //put div in main-section elem
+                    document.getElementById('videos').appendChild(cardDiv);
+
+                    h.adjustVideoElemSize();
                 }
             };
 

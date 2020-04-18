@@ -68,9 +68,9 @@
 
 
 .remote-video{
-    position: relative;
-    object-fit: cover !important;
-    height: 300px;
+    width:100%;
+    height:auto;
+    max-height: 90vh;
 }
 
 
@@ -96,8 +96,7 @@
     bottom: 0;
     left: 0;
     position: fixed;
-    width: 250px;
-    z-index: 1000;
+    width:15vw;
 }
 
 
@@ -106,15 +105,6 @@
     -moz-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
-}
-
-
-.single-peer-video{
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    min-width: 100%;
-    min-height: 100%;
 }
 
 
@@ -213,14 +203,6 @@
         display: none;
     }
 
-    .remote-video{
-        height: 200px;
-    }
-
-    .local-video{
-        width: 40vw;
-    }
-
     #chat-messages{
         height: 60vh;
     }
@@ -229,12 +211,22 @@
         bottom: 90px;
         margin-bottom: 0px;
     }
+    
+    .card-sm{
+        max-width: 100%;
+        min-width: 50%;
+    }
 
-    .single-peer-video{
-        position: fixed;
-        right: 0;
-        bottom: 0;
-        min-width: 100%;
-        min-height: 100%;
+
+    .local-video{
+        width:40vw;
+    }
+}
+
+
+@media (min-width:768px){
+    .card{
+        width: 100%;
+        z-index: 1000;
     }
 }

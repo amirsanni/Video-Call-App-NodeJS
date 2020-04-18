@@ -30,23 +30,23 @@ window.addEventListener('load', ()=>{
 
 
     //When the video frame is clicked. This will enable picture-in-picture
-    // document.getElementById('local').addEventListener('click', ()=>{
-    //     if (!document.pictureInPictureElement) {
-    //         document.getElementById('local').requestPictureInPicture()
-    //         .catch(error => {
-    //             // Video failed to enter Picture-in-Picture mode.
-    //             console.error(error);
-    //         });
-    //     } 
+    document.getElementById('local').addEventListener('click', ()=>{
+        if (!document.pictureInPictureElement) {
+            document.getElementById('local').requestPictureInPicture()
+            .catch(error => {
+                // Video failed to enter Picture-in-Picture mode.
+                console.error(error);
+            });
+        } 
           
-    //     else {
-    //         document.exitPictureInPicture()
-    //         .catch(error => {
-    //             // Video failed to leave Picture-in-Picture mode.
-    //             console.error(error);
-    //         });
-    //     }
-    // });
+        else {
+            document.exitPictureInPicture()
+            .catch(error => {
+                // Video failed to leave Picture-in-Picture mode.
+                console.error(error);
+            });
+        }
+    });
 
 
     //When the 'Create room" is button is clicked
@@ -111,26 +111,6 @@ window.addEventListener('load', ()=>{
 
         else if(e.target && e.target.classList.contains('mute-remote-mic')){
             helpers.singleStreamToggleMute(e);
-        }
-    });
-
-
-    //When 'close' is clicked to exit single peer video
-    document.getElementById('close-single-peer-btn').addEventListener('click', (e)=>{
-        document.querySelector('#close-single-peer-btn').style.display = 'none';
-
-        //minimise video
-        let singleStream = document.getElementsByClassName('single-peer-video');
-        singleStream[0].classList.add('remote-video');
-        singleStream[0].classList.remove('single-peer-video');
-
-        //show all remote video elements
-        let remoteVideoElems = document.getElementsByClassName('remote-video');
-
-        if(remoteVideoElems.length){
-            for(let i = 0; i < remoteVideoElems.length; i++){
-                remoteVideoElems[i].style.display = 'block';
-            }
         }
     });
 
