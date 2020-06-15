@@ -3,7 +3,7 @@ export default {
         const crypto = window.crypto || window.msCrypto;
         let array = new Uint32Array(1);
         
-        return crypto.getRandomValues(array) + '_' + Math.random().toString( 36 ).slice( 2 ).substring( 0, 9 );
+        return crypto.getRandomValues(array);
     },
 
 
@@ -108,10 +108,6 @@ export default {
 
 
     getIceServer() {
-        // "turns:eu-turn4.xirsys.com:5349?transport=tcp"
-        // "turns:eu-turn4.xirsys.com:443?transport=tcp"
-        // "turn:eu-turn4.xirsys.com:80?transport=tcp",
-        // "turn:eu-turn4.xirsys.com:3478?transport=udp",
         return {
             iceServers: [
                 {
@@ -150,7 +146,7 @@ export default {
 
         let colDiv = document.createElement( 'div' );
         colDiv.className = `col-10 card chat-card msg ${ msgBg }`;
-        colDiv.innerHTML = data.msg;
+        colDiv.innerHTML = xssFilters.inHTMLData( data.msg );
 
         let rowDiv = document.createElement( 'div' );
         rowDiv.className = `row ${ contentAlign } mb-2`;

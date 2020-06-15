@@ -126,7 +126,6 @@ window.addEventListener( 'load', () => {
             //emit chat message
             socket.emit( 'chat', data );
 
-
             //add localchat
             h.addChat( data, 'local' );
         }
