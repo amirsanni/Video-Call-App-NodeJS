@@ -146,7 +146,7 @@ export default {
 
         let colDiv = document.createElement( 'div' );
         colDiv.className = `col-10 card chat-card msg ${ msgBg }`;
-        colDiv.innerHTML = xssFilters.inHTMLData( data.msg );
+        colDiv.innerHTML = xssFilters.inHTMLData( data.msg ).autoLink( { target: "_blank", rel: "nofollow"});
 
         let rowDiv = document.createElement( 'div' );
         rowDiv.className = `row ${ contentAlign } mb-2`;
