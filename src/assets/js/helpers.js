@@ -1,6 +1,9 @@
 export default {
     generateRandomString() {
-        return Math.random().toString( 36 ).slice( 2 ).substring( 0, 15 );
+        const crypto = window.crypto || window.msCrypto;
+        let array = new Uint32Array(1);
+        
+        return crypto.getRandomValues(array) + '_' + Math.random().toString( 36 ).slice( 2 ).substring( 0, 9 );
     },
 
 
@@ -215,19 +218,6 @@ export default {
         let elem = e.target.parentElement.previousElementSibling;
 
         elem.requestFullscreen() || elem.mozRequestFullScreen() || elem.webkitRequestFullscreen() || elem.msRequestFullscreen();
-        // document.querySelector('#close-single-peer-btn').style.display = 'block';
-
-        // e.target.parentElement.previousElementSibling.classList.remove('remote-video');
-        // e.target.parentElement.previousElementSibling.classList.add('single-peer-video');
-
-        // //hide the other elements
-        // let remoteVideoElems = document.getElementsByClassName('remote-video');
-
-        // if(remoteVideoElems.length){
-        //     for(let i = 0; i < remoteVideoElems.length; i++){
-        //         remoteVideoElems[i].style.display = 'none';
-        //     }
-        // }
     },
 
 

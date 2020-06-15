@@ -8,8 +8,6 @@ const stream = ( socket ) => {
         if ( socket.adapter.rooms[data.room].length > 1 ) {
             socket.to( data.room ).emit( 'new user', { socketId: data.socketId } );
         }
-
-        console.log( socket.rooms );
     } );
 
 
