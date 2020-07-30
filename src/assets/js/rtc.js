@@ -1,18 +1,16 @@
-/**
- * @author Amir Sanni <amirsanni@gmail.com>
- * @date 6th January, 2020
- */
 import helper from './helpers.js';
 
 window.addEventListener( 'load', () => {
-    const room = helper.getQString( location.href, 'room' );
+    var room = helper.getQString( location.href, 'room' );
+    var joininguser = helper.getQString( location.href, 'joininguser' );
     const username = sessionStorage.getItem( 'username' );
-
+    
     if ( !room ) {
-        document.querySelector( '#room-create' ).attributes.removeNamedItem( 'hidden' );
+        //document.querySelector( '#room-create' ).attributes.removeNamedItem( 'hidden' );
+        room = Math.random().toString(36).substring(10);
     }
 
-    else if ( !username ) {
+    if ( !username && !joininguser ) {
         document.querySelector( '#username-set' ).attributes.removeNamedItem( 'hidden' );
     }
 
@@ -45,7 +43,7 @@ window.addEventListener( 'load', () => {
             let subscribeData = {
                 room: room,
                 socketId: socketId,
-                username: username
+                username: (username)?username:joininguser
             };
             console.log("Emit 'subscribe': "+JSON.stringify(subscribeData))
             socket.emit( 'subscribe', subscribeData);
