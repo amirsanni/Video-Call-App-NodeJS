@@ -12,15 +12,36 @@ let globalCache = {};
 globalCache["rooms"] = [];
 globalCache["users"] = [];
 globalCache["userSocketIds"] = [];
+globalCache["lobby"] = {};
 
 let addRoomIfUnique = (room) => {
     if (globalCache["rooms"].indexOf(room) === -1) {
       globalCache["rooms"].push(room);
     }
 };
-let addUser = (username) => {
+let addUser = (username, room) => {
     globalCache["users"].push(username);
+    if (!globalCache["lobby"][room])
+    {
+      globalCache["lobby"][room] = [];
+    }
+
+    if (!globalCache["lobby"][room].includes(username))
+    {
+      globalCache["lobby"][room].push(username);
+    }
+
+    for (var roomname in globalCache["lobby"])
+    {
+      if (globalCache["lobby"][roomname].includes(username) && roomname.toLocaleLowerCase() != room.toLocaleLowerCase())
+      {
+        this.arrayRemove(globalCache["lobby"][roomname], username);
+      }
+    }
 }
+
+function arrayRemove(arr, value) { return arr.filter(function(ele){ return ele != value; });}
+
 let addUserSocket = (socketId) => {
     globalCache["userSocketIds"].push(socketId);
 };
@@ -34,6 +55,10 @@ app.get("/", (req, res) => {
 
 app.get("/getallrooms", (req, res) => {
   res.json(globalCache["rooms"]);
+});
+
+app.get("/getlobby", (req, res) => {
+  res.json(globalCache["lobby"]);
 });
 
 app.get("/getallusers", (req, res) => {
@@ -59,7 +84,7 @@ const stream = (socket) => {
     //     TODO: Figure out what to do if a user connects with a new socketId?
     //a room HAS 1+ users (though might change when we allow users to log in first without being in a room)
     addRoomIfUnique(data.room);
-    addUser(data.username);
+    addUser(data.username, data.room);
     addUserSocket(data.socketId);
 
     //Inform other members in the room of new user's arrival
