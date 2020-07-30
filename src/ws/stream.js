@@ -1,3 +1,5 @@
+// TODO: Move stream logic back out here?
+// All logic has been moved to app.js file since I wanted to use a global cache
 const stream = ( socket ) => {
     socket.on( 'subscribe', ( data ) => {
         //subscribe/join a room

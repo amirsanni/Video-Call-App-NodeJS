@@ -2,10 +2,10 @@
  * @author Amir Sanni <amirsanni@gmail.com>
  * @date 6th January, 2020
  */
-import h from './helpers.js';
+import helper from './helpers.js';
 
 window.addEventListener( 'load', () => {
-    const room = h.getQString( location.href, 'room' );
+    const room = helper.getQString( location.href, 'room' );
     const username = sessionStorage.getItem( 'username' );
 
     if ( !room ) {
@@ -17,13 +17,13 @@ window.addEventListener( 'load', () => {
     }
 
     else {
+        console.log("Attempting to connect/create room: "+room);
         let commElem = document.getElementsByClassName( 'room-comm' );
-
         for ( let i = 0; i < commElem.length; i++ ) {
             commElem[i].attributes.removeNamedItem( 'hidden' );
         }
 
-        var pc = [];
+        var partnerConnections = [];
 
         let socket = io( '/stream' );
 
@@ -42,74 +42,86 @@ window.addEventListener( 'load', () => {
             socketId = socket.io.engine.id;
 
 
-            socket.emit( 'subscribe', {
+            let subscribeData = {
                 room: room,
-                socketId: socketId
-            } );
+                socketId: socketId,
+                username: username
+            };
+            console.log("Emit 'subscribe': "+JSON.stringify(subscribeData))
+            socket.emit( 'subscribe', subscribeData);
 
 
             socket.on( 'new user', ( data ) => {
-                socket.emit( 'newUserStart', { to: data.socketId, sender: socketId } );
-                pc.push( data.socketId );
+                console.log("Received 'new user': "+JSON.stringify(data));
+
+                let newUserStartData = { to: data.socketId, sender: socketId };
+                console.log("Emit 'newUserStart': "+JSON.stringify(newUserStartData));
+
+                socket.emit( 'newUserStart', newUserStartData);
+                partnerConnections.push( data.socketId );
                 init( true, data.socketId );
             } );
 
 
             socket.on( 'newUserStart', ( data ) => {
-                pc.push( data.sender );
+                console.log("Received 'newUserStart': "+JSON.stringify(data));
+                partnerConnections.push( data.sender );
                 init( false, data.sender );
             } );
 
 
             socket.on( 'ice candidates', async ( data ) => {
-                data.candidate ? await pc[data.sender].addIceCandidate( new RTCIceCandidate( data.candidate ) ) : '';
+                console.log("Received 'ice candidates'");
+                data.candidate ? await partnerConnections[data.sender].addIceCandidate( new RTCIceCandidate( data.candidate ) ) : '';
             } );
 
 
             socket.on( 'sdp', async ( data ) => {
+                console.log("Received 'sdp' from "+JSON.stringify(data.sender));
                 if ( data.description.type === 'offer' ) {
-                    data.description ? await pc[data.sender].setRemoteDescription( new RTCSessionDescription( data.description ) ) : '';
+                    data.description ? await partnerConnections[data.sender].setRemoteDescription( new RTCSessionDescription( data.description ) ) : '';
 
-                    h.getUserFullMedia().then( async ( stream ) => {
+                    helper.getUserFullMedia().then( async ( stream ) => {
                         if ( !document.getElementById( 'local' ).srcObject ) {
-                            h.setLocalStream( stream );
+                            helper.setLocalStream( stream );
                         }
 
                         //save my stream
                         myStream = stream;
 
                         stream.getTracks().forEach( ( track ) => {
-                            pc[data.sender].addTrack( track, stream );
+                            partnerConnections[data.sender].addTrack( track, stream );
                         } );
 
-                        let answer = await pc[data.sender].createAnswer();
+                        let answer = await partnerConnections[data.sender].createAnswer();
 
-                        await pc[data.sender].setLocalDescription( answer );
+                        await partnerConnections[data.sender].setLocalDescription( answer );
 
-                        socket.emit( 'sdp', { description: pc[data.sender].localDescription, to: data.sender, sender: socketId } );
+                        socket.emit( 'sdp', { description: partnerConnections[data.sender].localDescription, to: data.sender, sender: socketId } );
                     } ).catch( ( e ) => {
                         console.error( e );
                     } );
                 }
 
                 else if ( data.description.type === 'answer' ) {
-                    await pc[data.sender].setRemoteDescription( new RTCSessionDescription( data.description ) );
+                    await partnerConnections[data.sender].setRemoteDescription( new RTCSessionDescription( data.description ) );
                 }
             } );
 
 
             socket.on( 'chat', ( data ) => {
-                h.addChat( data, 'remote' );
+                console.log("Received 'chat': "+JSON.stringify(data));
+                helper.addChat( data, 'remote' );
             } );
         } );
 
 
         function getAndSetUserStream() {
-            h.getUserFullMedia().then( ( stream ) => {
+            helper.getUserFullMedia().then( ( stream ) => {
                 //save my stream
                 myStream = stream;
 
-                h.setLocalStream( stream );
+                helper.setLocalStream( stream );
             } ).catch( ( e ) => {
                 console.error( `stream error: ${ e }` );
             } );
@@ -127,36 +139,36 @@ window.addEventListener( 'load', () => {
             socket.emit( 'chat', data );
 
             //add localchat
-            h.addChat( data, 'local' );
+            helper.addChat( data, 'local' );
         }
 
 
 
         function init( createOffer, partnerName ) {
-            pc[partnerName] = new RTCPeerConnection( h.getIceServer() );
+            partnerConnections[partnerName] = new RTCPeerConnection( helper.getIceServer() );
 
             if ( screen && screen.getTracks().length ) {
                 screen.getTracks().forEach( ( track ) => {
-                    pc[partnerName].addTrack( track, screen );//should trigger negotiationneeded event
+                    partnerConnections[partnerName].addTrack( track, screen );//should trigger negotiationneeded event
                 } );
             }
 
             else if ( myStream ) {
                 myStream.getTracks().forEach( ( track ) => {
-                    pc[partnerName].addTrack( track, myStream );//should trigger negotiationneeded event
+                    partnerConnections[partnerName].addTrack( track, myStream );//should trigger negotiationneeded event
                 } );
             }
 
             else {
-                h.getUserFullMedia().then( ( stream ) => {
+                helper.getUserFullMedia().then( ( stream ) => {
                     //save my stream
                     myStream = stream;
 
                     stream.getTracks().forEach( ( track ) => {
-                        pc[partnerName].addTrack( track, stream );//should trigger negotiationneeded event
+                        partnerConnections[partnerName].addTrack( track, stream );//should trigger negotiationneeded event
                     } );
 
-                    h.setLocalStream( stream );
+                    helper.setLocalStream( stream );
                 } ).catch( ( e ) => {
                     console.error( `stream error: ${ e }` );
                 } );
@@ -166,26 +178,26 @@ window.addEventListener( 'load', () => {
 
             //create offer
             if ( createOffer ) {
-                pc[partnerName].onnegotiationneeded = async () => {
-                    let offer = await pc[partnerName].createOffer();
+                partnerConnections[partnerName].onnegotiationneeded = async () => {
+                    let offer = await partnerConnections[partnerName].createOffer();
 
-                    await pc[partnerName].setLocalDescription( offer );
+                    await partnerConnections[partnerName].setLocalDescription( offer );
 
-                    socket.emit( 'sdp', { description: pc[partnerName].localDescription, to: partnerName, sender: socketId } );
+                    socket.emit( 'sdp', { description: partnerConnections[partnerName].localDescription, to: partnerName, sender: socketId } );
                 };
             }
 
 
 
             //send ice candidate to partnerNames
-            pc[partnerName].onicecandidate = ( { candidate } ) => {
+            partnerConnections[partnerName].onicecandidate = ( { candidate } ) => {
                 socket.emit( 'ice candidates', { candidate: candidate, to: partnerName, sender: socketId } );
             };
 
 
 
             //add
-            pc[partnerName].ontrack = ( e ) => {
+            partnerConnections[partnerName].ontrack = ( e ) => {
                 let str = e.streams[0];
                 if ( document.getElementById( `${ partnerName }-video` ) ) {
                     document.getElementById( `${ partnerName }-video` ).srcObject = str;
@@ -215,32 +227,32 @@ window.addEventListener( 'load', () => {
                     //put div in main-section elem
                     document.getElementById( 'videos' ).appendChild( cardDiv );
 
-                    h.adjustVideoElemSize();
+                    helper.adjustVideoElemSize();
                 }
             };
 
 
 
-            pc[partnerName].onconnectionstatechange = ( d ) => {
-                switch ( pc[partnerName].iceConnectionState ) {
+            partnerConnections[partnerName].onconnectionstatechange = ( d ) => {
+                switch ( partnerConnections[partnerName].iceConnectionState ) {
                     case 'disconnected':
                     case 'failed':
-                        h.closeVideo( partnerName );
+                        helper.closeVideo( partnerName );
                         break;
 
                     case 'closed':
-                        h.closeVideo( partnerName );
+                        helper.closeVideo( partnerName );
                         break;
                 }
             };
 
 
 
-            pc[partnerName].onsignalingstatechange = ( d ) => {
-                switch ( pc[partnerName].signalingState ) {
+            partnerConnections[partnerName].onsignalingstatechange = ( d ) => {
+                switch ( partnerConnections[partnerName].signalingState ) {
                     case 'closed':
                         console.log( "Signalling state is 'closed'" );
-                        h.closeVideo( partnerName );
+                        helper.closeVideo( partnerName );
                         break;
                 }
             };
@@ -249,12 +261,12 @@ window.addEventListener( 'load', () => {
 
 
         function shareScreen() {
-            h.shareScreen().then( ( stream ) => {
-                h.toggleShareIcons( true );
+            helper.shareScreen().then( ( stream ) => {
+                helper.toggleShareIcons( true );
 
                 //disable the video toggle btns while sharing screen. This is to ensure clicking on the btn does not interfere with the screen sharing
                 //It will be enabled was user stopped sharing screen
-                h.toggleVideoBtnDisabled( true );
+                helper.toggleVideoBtnDisabled( true );
 
                 //save my screen stream
                 screen = stream;
@@ -275,14 +287,14 @@ window.addEventListener( 'load', () => {
 
         function stopSharingScreen() {
             //enable video toggle btn
-            h.toggleVideoBtnDisabled( false );
+            helper.toggleVideoBtnDisabled( false );
 
             return new Promise( ( res, rej ) => {
                 screen.getTracks().length ? screen.getTracks().forEach( track => track.stop() ) : '';
 
                 res();
             } ).then( () => {
-                h.toggleShareIcons( false );
+                helper.toggleShareIcons( false );
                 broadcastNewTracks( myStream, 'video' );
             } ).catch( ( e ) => {
                 console.error( e );
@@ -292,15 +304,15 @@ window.addEventListener( 'load', () => {
 
 
         function broadcastNewTracks( stream, type, mirrorMode = true ) {
-            h.setLocalStream( stream, mirrorMode );
+            helper.setLocalStream( stream, mirrorMode );
 
             let track = type == 'audio' ? stream.getAudioTracks()[0] : stream.getVideoTracks()[0];
 
-            for ( let p in pc ) {
-                let pName = pc[p];
+            for ( let p in partnerConnections ) {
+                let pName = partnerConnections[p];
 
-                if ( typeof pc[pName] == 'object' ) {
-                    h.replaceTrack( track, pc[pName] );
+                if ( typeof partnerConnections[pName] == 'object' ) {
+                    helper.replaceTrack( track, partnerConnections[pName] );
                 }
             }
         }
@@ -338,7 +350,7 @@ window.addEventListener( 'load', () => {
             mediaRecorder.onstop = function () {
                 toggleRecordingIcons( false );
 
-                h.saveRecordedStream( recordedStream, username );
+                helper.saveRecordedStream( recordedStream, username );
 
                 setTimeout( () => {
                     recordedStream = [];
@@ -438,7 +450,7 @@ window.addEventListener( 'load', () => {
              * Get the stream based on selection and start recording
              */
             if ( !mediaRecorder || mediaRecorder.state == 'inactive' ) {
-                h.toggleModal( 'recording-options-modal', true );
+                helper.toggleModal( 'recording-options-modal', true );
             }
 
             else if ( mediaRecorder.state == 'paused' ) {
@@ -453,14 +465,14 @@ window.addEventListener( 'load', () => {
 
         //When user choose to record screen
         document.getElementById( 'record-screen' ).addEventListener( 'click', () => {
-            h.toggleModal( 'recording-options-modal', false );
+            helper.toggleModal( 'recording-options-modal', false );
 
             if ( screen && screen.getVideoTracks().length ) {
                 startRecording( screen );
             }
 
             else {
-                h.shareScreen().then( ( screenStream ) => {
+                helper.shareScreen().then( ( screenStream ) => {
                     startRecording( screenStream );
                 } ).catch( () => { } );
             }
@@ -469,14 +481,14 @@ window.addEventListener( 'load', () => {
 
         //When user choose to record own video
         document.getElementById( 'record-video' ).addEventListener( 'click', () => {
-            h.toggleModal( 'recording-options-modal', false );
+            helper.toggleModal( 'recording-options-modal', false );
 
             if ( myStream && myStream.getTracks().length ) {
                 startRecording( myStream );
             }
 
             else {
-                h.getUserFullMedia().then( ( videoStream ) => {
+                helper.getUserFullMedia().then( ( videoStream ) => {
                     startRecording( videoStream );
                 } ).catch( () => { } );
             }
