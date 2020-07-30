@@ -21,26 +21,34 @@ let addRoomIfUnique = (room) => {
 };
 let addUser = (username, room) => {
     globalCache["users"].push(username);
+    
     if (!globalCache["lobby"][room])
     {
       globalCache["lobby"][room] = [];
     }
 
-    if (!globalCache["lobby"][room].includes(username))
-    {
-      globalCache["lobby"][room].push(username);
-    }
-
     for (var roomname in globalCache["lobby"])
     {
-      if (globalCache["lobby"][roomname].includes(username) && roomname.toLocaleLowerCase() != room.toLocaleLowerCase())
+      if (globalCache["lobby"][roomname].find(x=>x.username == username) && roomname.toLocaleLowerCase() != room.toLocaleLowerCase())
       {
-        this.arrayRemove(globalCache["lobby"][roomname], username);
+        arrayRemove(globalCache["lobby"][roomname], username);
       }
+    }
+
+    if (!globalCache["lobby"][room].find(x=>x.username == username))
+    {
+      var user = {
+        username: username,
+        url: "http://localhost:3000/?room="+room
+      }
+      globalCache["lobby"][room].push(user);
     }
 }
 
-function arrayRemove(arr, value) { return arr.filter(function(ele){ return ele != value; });}
+function arrayRemove(arr, value) {
+  var i = arr.findIndex(x=>x.username == value); 
+  arr.splice(i, 1);
+}
 
 let addUserSocket = (socketId) => {
     globalCache["userSocketIds"].push(socketId);
@@ -57,7 +65,7 @@ app.get("/getallrooms", (req, res) => {
   res.json(globalCache["rooms"]);
 });
 
-app.get("/getlobby", (req, res) => {
+app.get("/getatrium", (req, res) => {
   res.json(globalCache["lobby"]);
 });
 
@@ -73,7 +81,7 @@ app.get("/getallusersocketids", (req, res) => {
 const stream = (socket) => {
   socket.on("subscribe", (data) => {
     console.log("Received 'subscribe': "+JSON.stringify(data));
-
+    addUser(data.username, data.room);
     //subscribe/join a room
     //TODO: What exactly does socket.join() do and why do we need to do that for room?
     socket.join(data.room);
@@ -84,7 +92,6 @@ const stream = (socket) => {
     //     TODO: Figure out what to do if a user connects with a new socketId?
     //a room HAS 1+ users (though might change when we allow users to log in first without being in a room)
     addRoomIfUnique(data.room);
-    addUser(data.username, data.room);
     addUserSocket(data.socketId);
 
     //Inform other members in the room of new user's arrival
