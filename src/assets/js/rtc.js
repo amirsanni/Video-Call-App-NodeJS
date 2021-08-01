@@ -28,6 +28,7 @@ window.addEventListener( 'load', () => {
         let socket = io( '/stream' );
 
         var socketId = '';
+        var randomNumber = `__${h.generateRandomString()}__${h.generateRandomString()}__`;
         var myStream = '';
         var screen = '';
         var recordedStream = [];
@@ -40,6 +41,7 @@ window.addEventListener( 'load', () => {
         socket.on( 'connect', () => {
             //set socketId
             socketId = socket.io.engine.id;
+            document.getElementById('randomNumber').innerText = randomNumber;
 
 
             socket.emit( 'subscribe', {
@@ -120,7 +122,7 @@ window.addEventListener( 'load', () => {
             let data = {
                 room: room,
                 msg: msg,
-                sender: username
+                sender: `${username} (${randomNumber})`
             };
 
             //emit chat message
