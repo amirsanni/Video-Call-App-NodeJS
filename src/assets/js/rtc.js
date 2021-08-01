@@ -120,7 +120,7 @@ window.addEventListener( 'load', () => {
             let data = {
                 room: room,
                 msg: msg,
-                sender: username
+                sender: `${username} (${socketId})`
             };
 
             //emit chat message
