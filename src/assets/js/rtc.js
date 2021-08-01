@@ -40,6 +40,7 @@ window.addEventListener( 'load', () => {
         socket.on( 'connect', () => {
             //set socketId
             socketId = socket.io.engine.id;
+            document.getElementById('socketId').innerText = socket.io.engine.id;
 
 
             socket.emit( 'subscribe', {
