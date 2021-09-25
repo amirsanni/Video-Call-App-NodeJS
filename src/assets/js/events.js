@@ -58,7 +58,7 @@ window.addEventListener( 'load', () => {
 
         if ( roomName && yourName ) {
             //remove error message, if any
-            document.querySelector( '#err-msg' ).innerHTML = "";
+            document.querySelector('#err-msg').innerText = "";
 
             //save the user's name in sessionStorage
             sessionStorage.setItem( 'username', yourName );
@@ -76,7 +76,7 @@ window.addEventListener( 'load', () => {
         }
 
         else {
-            document.querySelector( '#err-msg' ).innerHTML = "All fields are required";
+            document.querySelector('#err-msg').innerText = "All fields are required";
         }
     } );
 
@@ -89,7 +89,7 @@ window.addEventListener( 'load', () => {
 
         if ( name ) {
             //remove error message, if any
-            document.querySelector( '#err-msg-username' ).innerHTML = "";
+            document.querySelector('#err-msg-username').innerText = "";
 
             //save the user's name in sessionStorage
             sessionStorage.setItem( 'username', name );
@@ -99,7 +99,7 @@ window.addEventListener( 'load', () => {
         }
 
         else {
-            document.querySelector( '#err-msg-username' ).innerHTML = "Please input your name";
+            document.querySelector('#err-msg-username').innerText = "Please input your name";
         }
     } );
 
