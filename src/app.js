@@ -16,4 +16,6 @@ app.get( '/', ( req, res ) => {
 
 io.of( '/stream' ).on( 'connection', stream );
 
-server.listen( 3000 );
+server.listen( 3000, () => {
+    console.log("App running on port 3000")
+} );
