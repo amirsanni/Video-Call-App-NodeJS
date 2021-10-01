@@ -39,7 +39,6 @@
             </div>
         </div>
         
-        
         <nav class="navbar fixed-top bg-info rounded-0 d-print-none">
             <div class="text-white">Video Call</div>
 
@@ -98,8 +97,6 @@
             </div>
         </div>
 
-
-
         <div class="container-fluid" id='username-set' hidden>
             <div class="row">
                 <div class="col-12 h4 mt-5 text-center">Your Name</div>
@@ -120,8 +117,6 @@
                 </div>
             </div>
         </div>
-
-
         
         <div class="container-fluid room-comm" hidden>
             <div class="row">
@@ -140,9 +135,14 @@
 
                     <div id='chat-messages'></div>
 
-                    <div class="row">
-                        <textarea id='chat-input' class="form-control rounded-0 chat-box border-info" rows='3' placeholder="Type here..."></textarea>
-                    </div>
+                    <form>
+                        <div class="input-group mb-3" >
+                            <textarea  id="chat-input" class="form-control rounded-0 chat-box border-info" rows='3' placeholder="Type here..."></textarea>
+                            <div class="input-group-append" id='chat-input-btn'>
+                                <button type="button" class="btn btn-dark rounded-0 border-info btn-no-effect">Send</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

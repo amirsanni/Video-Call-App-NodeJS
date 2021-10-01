@@ -36,7 +36,7 @@
 }
 
 .chat-box{
-    bottom: 30px;
+    bottom: 0px;
     right: 0;
     position: absolute;
     border: 0;
