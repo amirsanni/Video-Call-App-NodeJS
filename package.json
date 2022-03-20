@@ -4,6 +4,7 @@
   "description": "A conference call implementation using WebRTC, Socket.io and Node.js.",
   "main": "src/app.js",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "serve-favicon": "^2.5.0",
     "socket.io": "^2.4.0"
@@ -13,7 +14,8 @@
   },
   "scripts": {
     "watch": "nodemon --watch \"src/\" --exec \"node src/app.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "npm install && cd code-compiler && npm install && npm run build && cd .. && xcopy .\\code-compiler\\build .\\build\\ /D /E /Y && move build\\index.html build\\app.html && cd src && node app.js"
   },
   "repository": {
     "type": "git",
