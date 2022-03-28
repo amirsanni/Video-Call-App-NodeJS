@@ -352,6 +352,16 @@ window.addEventListener( 'load', () => {
             };
         }
 
+        document.getElementById('chat-input-btn').addEventListener('click',(e) => {
+            console.log("here: ",document.getElementById('chat-input').value)
+            if (  document.getElementById('chat-input').value.trim()  ) {
+                sendMsg( document.getElementById('chat-input').value );
+
+                setTimeout( () => {
+                    document.getElementById('chat-input').value = '';
+                }, 50 );
+            }
+        });
 
         //Chat textarea
         document.getElementById( 'chat-input' ).addEventListener( 'keypress', ( e ) => {
