@@ -4,7 +4,7 @@
   "description": "A conference call implementation using WebRTC, Socket.io and Node.js.",
   "main": "src/app.js",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "serve-favicon": "^2.5.0",
     "socket.io": "^4.4.1"
   },
